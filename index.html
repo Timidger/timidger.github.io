@@ -7,7 +7,9 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/github-gist.css">
+    <script src="js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
   </head>
   <body>
     <section class="page-header">
@@ -17,15 +19,96 @@
 
     <section class="main-content">
       <h3>
-<a id="designing-a-bi-directional-mutable-tree-safely-in-rust" class="anchor" href="#designing-a-bi-directional-mutable-tree-safely-in-rust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designing a bi-directional mutable tree safely in Rust</h3>
-
+          <a id="designing-a-bi-directional-mutable-tree-safely-in-rust" class="anchor" href="#designing-a-bi-directional-mutable-tree-safely-in-rust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designing a bi-directional mutable tree safely in Rust</h3>
+      <!--Things I want to talk about:
+      <ol>
+          <li>
+              The problem we are trying to solve (emulate what i3 does, link to their tree)
+          </li>
+          <li>
+              Why our first attempt using a combination of <code>RefCell</code> and <code>Rc</code> was awkward and difficult to debug
+          </li>
+          <li>
+              The two problems with the unsafe tree
+              <ul>
+                <li>
+                    Having a mutable pointer to self allows us to move ourselves, but the pointer doesn't get updated (self suddenly changes what it points to)
+                </li>
+                <li>
+                    Using vectors and having them resize suddenly. That invalidates all our parent pointers. Explain how Sway/i3 solved this by using linked lists and how we can do better because we have better tools than C
+                </li>
+              </ul>
+          </li>
+      </ol>
+      -->
+      <p>While designing <a href="https://github.com/Immington-Industries/way-cooler">Way Cooler</a>, it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the <a href="http://dwm.suckless.org/">different</a> <a href="https://awesome.naquadah.org/">tiling</a> <a href="http://i3wm.org/">window</a> <a href="http://xmonad.org/">managers</a> for X, it becomes aparent that there is no one-size-fits-all method. Since one of the primary goals of Way Cooler is to be as customizable as possible, we want the user to choose the method that works best for them.</p>
+      <p>Since the window manager I'm most familar and comfortable with is i3, I decided to implement that first. i3 manages the windows on the screen by constructing a <a href="http://i3wm.org/docs/userguide.html#_tree">virtual tree</a> that the user can manipulate by adding containers and switching how each container lays out its children. Unlike Awesome's static layout templates or Xmonad's non-structured horizontal/vertical/fullscreen tiling, i3 lets you construct a layout yourself. Since i3's commands are so simple, it will be trivial to either augment them or strip them away completely when we offer more tiling options to the user.</p>
+      <p><a href="https://www.rust-lang.org/en-US/">Rust</a>, our language of choice for Way Cooler, encourages a data-orientated approach to programming. Since our tree had to be flexible enought to accomodate all these different tiling styles, our data structure had to be designed to be as flexible as possible. After taking a good long look at the i3 docs, we came up with the following structure for a node in the tree:</p>
+      <pre><code class="Rust">pub struct Node {
+     parent: Option&ltWeak&ltRefCell&ltNode&gt&gt&gt,
+     children: Vec&ltRc&ltRefCell&ltNode&gt&gt&gt&gt,
+     // eliding other fields
+}</code></pre>
+      <p>Needless to say, those fields are very complicated. What are all those wrappers doing? Lets break it down and see just what kind of a mess we've gotten ourselves into.
+          <p>A parent is wrapped in an <code>Option</code> because it's possible for the <code>Node</code> to be the root of the tree, which doesn't have a parent. We could define our tree so that the root just refers to itself, but not only can that be messy <a ref="http://stackoverflow.com/questions/32300132/why-cant-i-store-a-value-and-a-reference-to-that-value-in-the-same-struct">if we change to bare references</a>, it also doesn't force us to check if we have exhausted our search of the tree.</p>
+          <p>Next is <code>Rc</code> and <code>Weak</code>. These types are actually referring to the same thing: a reference counted smart pointer. We can't use bare references here because Rust won't let us modify the tree and invalidate its internal references to itself because that would be unsafe.  When you <code>.clone()</code> an <code>Rc</code>, instead of copying the underlying value it increments an internal counter and lets us happily use and destroy the value because all we have is a pointer to the data. The value behind the pointer is only dropped when the counter reaches 0, so an <code>Rc</code> will never attempt to access a dangling pointer. When an <code>Rc</code> is downgraded to a <code>Weak</code> it decrements the reference count but keeps the pointer to the value in the <code>Weak</code>. Whenever you try to dereference the <code>Weak</code>, you have to check if it still exists since your reference isn't keeping it alive anymore. So whenever you move up the tree you have to check if your branch is still part of the tree.<sup><a name="weak-parent-back" href="#weak-parent">1</a></sup>
+          <p>A <code>Cell</code>/<code>RefCell</code> is used whenever you want to be able to mutate a field of a struct but you are unable or unwilling to own or mutably borrow the whole struct. Since we are constructing a tree, most of our operations are defined recursively, which means we can't mutably borrow a container and its children at the same time. The borrow checker will infer that because we have a reference to a <code>Node</code> and a child of that <code>Node</code>, we could hypothetically delete the parent <code>Node</code> and cause our reference to become a dangling pointer. <br>This is a very helpful and powerful smart pointer, but it comes with a huge cost. All of the borrow checking rules will now happen at run time, where a non-unique mutable borrow will cause a panic. This makes it very easy to write invalid code because the compiler won't tell us we are making a mistake until it blows up in our face.</p>
+          <p> Ok, that was a lot to take in, but it's not too bad when you look at it from a 10,000 foot view. To recap:
+                  <ul>
+                      <li>
+                          A <code>Node</code> has a parent <code>Node</code> and an arbitrary number of children nodes.
+                      </li>
+                      <li>
+                          The parent node may or may not exist, depending on if we are at the top of the tree.
+                      </li>
+                      <li>
+                          A node owns its children and needs to check if it is still part of the tree whenever it traverses up through its parent.
+                      </li>
+                      <li>
+                          Since we want to select portions of the tree to be mutable, each node must be wrapped in a <code>RefCell</code> to avoid borrow checker complaints
+                      </li></p>
+          <p>Alright, lets see what some code using this data structure looks like. Lets look at something simple, like adding a child <code>Node</code> to an already existing <code>Node</code>.</p>
+          <pre><code>pub fn add_child(parent: Node, child: Node) {
+    child.borrow_mut().set_parent(Rc::downgrade(&parent.clone()));
+    parent.borrow_mut().children.push(child);
+}</code></pre>
+          <p>Even for such a simple example, it's obvious that this is going to get very tedious. Here's a direct example from our old code for adding new containers, which has more complicated logic. Don't worry about understanding it, just notice how many explicit drops and <code>borrow_mut</code>'s are needed.<sup><a name="smart-pointer-tree-code-back" href="#smart-pointer-tree-code">2</a></sup></p>
+          <pre><code>    pub fn new_container(parent_: &mut Node, mut layout: Layout) -> Node {
+        let mut parent = parent_.borrow_mut();
+        // NOTE Make sure we do all of the Container specific init stuff
+        let container = Rc::new(RefCell::new(Container {
+            parent: Some(Rc::downgrade(&parent_)),
+            children: vec!(),
+            container_type: ContainerType::Container,
+            layout: Some(layout),
+        }));
+        if parent.get_type() == ContainerType::Workspace {
+            let mut workspace = parent;
+            if let Some(layout) = workspace.get_layout() {
+                container.borrow_mut().set_layout(layout);
+            }
+            workspace.add_child(container.clone());
+        } else {
+            // Need to add the "parent" as the child of the container we just made.
+            drop(parent);
+            let child_ = parent_.clone();
+            let child = child_.borrow();
+            let parent_of_child = child.get_parent().expect("Parent container has no parent");
+            let child_clone = Rc::make_mut(&mut child_.clone()).clone().into_inner();
+            // Need to remove the child from their parent
+            parent_of_child.borrow_mut().remove_child(&child_clone.clone());
+            // Add the container we just made as a child, replacing the one we removed
+            parent_of_child.borrow_mut().add_child(container.clone());
+            // The new container is now a child of the old child's parent
+            container.borrow_mut().add_child(child_.clone());
+        }
+        container
+}</code></pre>
+          <p>This tree, though memory safe, is very tedious to use and could fall apart at any time if we forget to drop a <code>RefCell</code> before trying to borrow it again. There has to be a way to get back compile time checks for borrow checking.</p>
       <footer class="site-footer">
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+          <p><sup><a href="#weak-parent-back">1</a></sup><a name="weak-parent"></a>Note that we can not have both the parents and the children be reference counted, otherwise that would create a cycle and consequentally a memory leak.</p>
+          <p><sup><a href="#smart-pointer-tree-code-back">2</a></sup><a name="smart-pointer-tree-code"></a> Here's a link to the <a href="https://github.com/Immington-Industries/way-cooler/blob/7e22199bd57e9286a74c98e2b829a0ace72ecadd/src/layout/containers.rs">full code</a>, if you'd like to see just how nasty it can get.</p>
       </footer>
-
     </section>
-
-  
   </body>
 </html>

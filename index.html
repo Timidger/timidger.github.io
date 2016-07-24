@@ -14,46 +14,26 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">A Pragmatic Place</h1>
-      <h2 class="project-tagline">&quot;Perfect is the enemy of the good&quot;</h2>
+      <h2 class="project-tagline">Sacrificing purity for practicality</h2>
     </section>
 
     <section class="main-content">
       <h3>
-          <a id="designing-a-bi-directional-mutable-tree-safely-in-rust" class="anchor" href="#designing-a-bi-directional-mutable-tree-safely-in-rust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designing a bi-directional mutable tree safely in Rust</h3>
-      <!--Things I want to talk about:
-      <ol>
-          <li>
-              The problem we are trying to solve (emulate what i3 does, link to their tree)
-          </li>
-          <li>
-              Why our first attempt using a combination of <code>RefCell</code> and <code>Rc</code> was awkward and difficult to debug
-          </li>
-          <li>
-              The two problems with the unsafe tree
-              <ul>
-                <li>
-                    Having a mutable pointer to self allows us to move ourselves, but the pointer doesn't get updated (self suddenly changes what it points to)
-                </li>
-                <li>
-                    Using vectors and having them resize suddenly. That invalidates all our parent pointers. Explain how Sway/i3 solved this by using linked lists and how we can do better because we have better tools than C
-                </li>
-              </ul>
-          </li>
-      </ol>
-      -->
+          <a id="designing-a-mutable-bi-directional-tree-safely-in-rust" class="anchor" href="#designing-a-bi-mutable-directional-tree-safely-in-rust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designing a mutable bi-directional tree safely in Rust</h3>
       <p>While designing <a href="https://github.com/Immington-Industries/way-cooler">Way Cooler</a>, it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the <a href="http://dwm.suckless.org/">different</a> <a href="https://awesome.naquadah.org/">tiling</a> <a href="http://i3wm.org/">window</a> <a href="http://xmonad.org/">managers</a> for X, it becomes aparent that there is no one-size-fits-all method. Since one of the primary goals of Way Cooler is to be as customizable as possible, we want the user to choose the method that works best for them.</p>
       <p>Since the window manager I'm most familar and comfortable with is i3, I decided to implement that first. i3 manages the windows on the screen by constructing a <a href="http://i3wm.org/docs/userguide.html#_tree">virtual tree</a> that the user can manipulate by adding containers and switching how each container lays out its children. Unlike Awesome's static layout templates or Xmonad's non-structured horizontal/vertical/fullscreen tiling, i3 lets you construct a layout yourself. Since i3's commands are so simple, it will be trivial to either augment them or strip them away completely when we offer more tiling options to the user.</p>
+      <h4>Designing the data definition using smart pointers</h4>
       <p><a href="https://www.rust-lang.org/en-US/">Rust</a>, our language of choice for Way Cooler, encourages a data-orientated approach to programming. Since our tree had to be flexible enought to accomodate all these different tiling styles, our data structure had to be designed to be as flexible as possible. After taking a good long look at the i3 docs, we came up with the following structure for a node in the tree:</p>
       <pre><code class="Rust">pub struct Node {
      parent: Option&ltWeak&ltRefCell&ltNode&gt&gt&gt,
-     children: Vec&ltRc&ltRefCell&ltNode&gt&gt&gt&gt,
+     children: Vec&ltRc&ltRefCell&ltNode&gt&gt&gt,
      // eliding other fields
 }</code></pre>
       <p>Needless to say, those fields are very complicated. What are all those wrappers doing? Lets break it down and see just what kind of a mess we've gotten ourselves into.
-          <p>A parent is wrapped in an <code>Option</code> because it's possible for the <code>Node</code> to be the root of the tree, which doesn't have a parent. We could define our tree so that the root just refers to itself, but not only can that be messy <a ref="http://stackoverflow.com/questions/32300132/why-cant-i-store-a-value-and-a-reference-to-that-value-in-the-same-struct">if we change to bare references</a>, it also doesn't force us to check if we have exhausted our search of the tree.</p>
-          <p>Next is <code>Rc</code> and <code>Weak</code>. These types are actually referring to the same thing: a reference counted smart pointer. We can't use bare references here because Rust won't let us modify the tree and invalidate its internal references to itself because that would be unsafe.  When you <code>.clone()</code> an <code>Rc</code>, instead of copying the underlying value it increments an internal counter and lets us happily use and destroy the value because all we have is a pointer to the data. The value behind the pointer is only dropped when the counter reaches 0, so an <code>Rc</code> will never attempt to access a dangling pointer. When an <code>Rc</code> is downgraded to a <code>Weak</code> it decrements the reference count but keeps the pointer to the value in the <code>Weak</code>. Whenever you try to dereference the <code>Weak</code>, you have to check if it still exists since your reference isn't keeping it alive anymore. So whenever you move up the tree you have to check if your branch is still part of the tree.<sup><a name="weak-parent-back" href="#weak-parent">1</a></sup>
-          <p>A <code>Cell</code>/<code>RefCell</code> is used whenever you want to be able to mutate a field of a struct but you are unable or unwilling to own or mutably borrow the whole struct. Since we are constructing a tree, most of our operations are defined recursively, which means we can't mutably borrow a container and its children at the same time. The borrow checker will infer that because we have a reference to a <code>Node</code> and a child of that <code>Node</code>, we could hypothetically delete the parent <code>Node</code> and cause our reference to become a dangling pointer. <br>This is a very helpful and powerful smart pointer, but it comes with a huge cost. All of the borrow checking rules will now happen at run time, where a non-unique mutable borrow will cause a panic. This makes it very easy to write invalid code because the compiler won't tell us we are making a mistake until it blows up in our face.</p>
-          <p> Ok, that was a lot to take in, but it's not too bad when you look at it from a 10,000 foot view. To recap:
+          <p>A parent is wrapped in an <a href="https://doc.rust-lang.org/std/option/enum.Option.html"><code>Option</code></a> because it's possible for the <code>Node</code> to be the root of the tree, which doesn't have a parent. We could define our tree so that the root just refers to itself, but not only can that be messy <a ref="http://stackoverflow.com/questions/32300132/why-cant-i-store-a-value-and-a-reference-to-that-value-in-the-same-struct">if we change to bare references</a>, it also doesn't force us to check if we have exhausted our search of the tree.</p>
+          <p>Next is <a href="https://doc.rust-lang.org/std/rc/struct.Rc.html"><code>Rc</code></a> and <a href="https://doc.rust-lang.org/std/rc/struct.Weak.html"><code>Weak</code></a>. These types are actually referring to the same thing: a reference counted smart pointer. We can't use bare references here because Rust won't let us modify the tree and invalidate its internal references to itself because that would be unsafe.  When you <code>.clone()</code> an <code>Rc</code>, instead of copying the underlying value it increments an internal counter and lets us happily use and destroy the <code>Rc</code> because all we have is a pointer to the data. The value behind the pointer is only dropped when the counter reaches 0, so an <code>Rc</code> will never attempt to access a dangling pointer.<br>When an <code>Rc</code> is downgraded to a <code>Weak</code> it decrements the reference count but keeps the pointer to the value in the <code>Weak</code>. Whenever you try to dereference the <code>Weak</code>, you have to check if it still exists since your reference isn't keeping it alive anymore. So whenever you move up the tree you have to check if your branch is still part of the tree.<sup><a name="weak-parent-back" href="#weak-parent">1</a></sup>
+          <p>A <a href="https://doc.rust-lang.org/std/cell/struct.RefCell.html"><code>RefCell</code></a> is used whenever you want to be able to mutate a field of a struct but you are unable or unwilling to own or mutably borrow the whole struct. Since we are constructing a tree, most of our operations are defined recursively, which means we can't mutably borrow a container and its children at the same time. The borrow checker will infer that because we have a reference to a <code>Node</code> and a child of that <code>Node</code>, we could hypothetically delete the parent <code>Node</code> and cause our reference to become a dangling pointer. <br>This is a very helpful and powerful smart pointer, but it comes with a huge cost. All of the borrow checking rules will now happen at run time, where a non-unique mutable borrow will cause a panic. This makes it very easy to write invalid code because the compiler won't tell us we are making a mistake until it blows up in our face.</p>
+          <p> Ok, that was a lot to take in, but it's not too bad when you look at it from a 10,000 foot view. To recap:</p>
                   <ul>
                       <li>
                           A <code>Node</code> has a parent <code>Node</code> and an arbitrary number of children nodes.
@@ -66,7 +46,8 @@
                       </li>
                       <li>
                           Since we want to select portions of the tree to be mutable, each node must be wrapped in a <code>RefCell</code> to avoid borrow checker complaints
-                      </li></p>
+                      </li>
+                  </ul>
           <p>Alright, lets see what some code using this data structure looks like. Lets look at something simple, like adding a child <code>Node</code> to an already existing <code>Node</code>.</p>
           <pre><code>pub fn add_child(parent: Node, child: Node) {
     child.borrow_mut().set_parent(Rc::downgrade(&parent.clone()));
@@ -93,7 +74,7 @@
             drop(parent);
             let child_ = parent_.clone();
             let child = child_.borrow();
-            let parent_of_child = child.get_parent().expect("Parent container has no parent");
+            let parent_of_child = child.get_parent().expect("child had no parent");
             let child_clone = Rc::make_mut(&mut child_.clone()).clone().into_inner();
             // Need to remove the child from their parent
             parent_of_child.borrow_mut().remove_child(&child_clone.clone());
@@ -104,10 +85,76 @@
         }
         container
 }</code></pre>
-          <p>This tree, though memory safe, is very tedious to use and could fall apart at any time if we forget to drop a <code>RefCell</code> before trying to borrow it again. There has to be a way to get back compile time checks for borrow checking.</p>
+          <p>This tree, though memory safe, is very tedious to use and could fall apart at any time if we forget to drop a <code>RefCell</code> before trying to borrow it again. It also wouldn't be easy to extend to work with the other tiling methods that we want to support. What we need is a way to mutate part of the tree without the need for <code>RefCell</code>.</p>
+          <h4>Gaining flexiblity with custom unsafe abstractions</h4>
+          <p>Since Rust is a systems programming language it gives us the tools to make our own safe abstractions. Raw pointers (<code>*const</code> and <code>*mut</code>) are like references but they do not check the special borrow checker rules at compile time. It's up to the programmer to ensure that these rules are enforced in his code. The rules themselves are very simple, but can be tricky to get right:</p>
+              <ul>
+                  <li>
+                      One or more references (&T) to a resource
+                  </li>
+                  <li>
+                      Exactly one mutable reference (&mut T)
+                  </li>
+              </ul>
+          <p>Here's our tree, converted to using unsafe raw pointers:</p>
+          <pre><code>pub struct Node {
+    parent: *mut Node,
+    val: Container,
+    children: Vec&ltNode&gt
+}</code></pre>
+          <p>This is much better looking, though now we need to ensure that we are following those rules manually.</p>
+          <p>Since a node can have an arbitrary number of children and each node needs to have a <code>*mut</code> to its parent, there can be an arbitrary number of raw mutable pointers to the same resource. This is bad, but fixable. Since nodes own their children (they are moved into the <code>Vec</code> and are no longer behind an <code>Rc</code>) whenever we delete a node all of its children are immediantly dropped as well. To ensure that there is absolutely no way a child can point to a removed parent, we'll override <code>Drop</code> for <code>Node</code>:</p>
+          <pre><code>impl Drop for Node {
+    fn drop(&mut self) {
+        let children: &mut Vec&ltNode&gt = &mut self.children;
+        for mut child in children {
+            child.parent = ptr::null_mut();
+        }
+    }
+}</code></pre>
+          <p>Now, thanks to RAII, there is no way for a child to have a dangling reference to a parent that was removed. Excellent! We solved the memory unsafety right?</p>
+          <p>Unfortunately, no. This unsafe abstraction is very leaky. A node borrowed as mutable is no longer checked by the borrow checker, since it passes through the unsafe raw pointer to get a reference to itself.  </p>
+          <pre><code>    /// Attempts to get the Node as a mutable reference by going through it's parent
+    ///
+    /// # Unsafety
+    /// The borrow checker can not properly infer that you are taking a mutable reference
+    /// to this Node, so it is possible to invalidate any other references to this
+    /// Node when you use this method.
+    pub unsafe fn as_mut<'a>(&'a self) -> &'a mut Node {
+        let maybe_parent = self.get_parent();
+        if maybe_parent.is_some() {
+            let parent: &'a mut Node = self.get_parent().unwrap();
+            for child in parent.get_children_mut() {
+                if *child == *self {
+                    return child;
+                }
+            };
+        }
+        if self.get_val().get_type() == ContainerType::Root {
+            panic!("Tried to take as_mut of root")
+        } else {
+            panic!("Tried to take as_mut of a node not in the tree")
+        }
+}</code></pre>
+          <p>However, even with that annotation Rust will no longer stop us from shooting ourselves in the foot. Can you spot the memory unsafety bug in the following function?</p>
+          <pre><code>/// Remove a node from its parent.
+/// This method will mutate the parent if it exists.
+pub fn remove_from_parent(&mut self) -> Option&ltNode&gt {
+    let mut maybe_node: Option&ltNode&gt = None;
+    if let Some(mut parent) = self.get_parent() {
+        if let Some(index) = parent.children.iter().position(|c| c == self) {
+            maybe_node = Some(parent.children.remove(index));
+        }
+    }
+    self.parent = ptr::null_mut();
+    maybe_node
+}</code></pre>
+          <p>The bug is on the line where we remove ourselves and move the value into <code>maybe_node</code>. The <code>Node</code> we are moving is the same <code>Node</code> pointed to by <code>self</code>, so after the removal <code>self</code> will be a dangling pointer. In practice, this means that when we set the parent to be <code>ptr::null_mut()</code> after the removal we are actually setting the sibling of the original node's parent since when we remove the node the vector moves all of the elements over to the left.<sup><a href="#vector-unsafety-gist" name="vector-unsafety-gist-back">4</sup></p>
       <footer class="site-footer">
-          <p><sup><a href="#weak-parent-back">1</a></sup><a name="weak-parent"></a>Note that we can not have both the parents and the children be reference counted, otherwise that would create a cycle and consequentally a memory leak.</p>
+          <p><sup><a href="#weak-parent-back">1</a></sup><a name="weak-parent"></a> Note that we can not have both the parents and the children be reference counted, otherwise that would create a cycle and consequentally a memory leak.</p>
           <p><sup><a href="#smart-pointer-tree-code-back">2</a></sup><a name="smart-pointer-tree-code"></a> Here's a link to the <a href="https://github.com/Immington-Industries/way-cooler/blob/7e22199bd57e9286a74c98e2b829a0ace72ecadd/src/layout/containers.rs">full code</a>, if you'd like to see just how nasty it can get.</p>
+          <p><sup><a href="#vec-src-back">3</a></sup><a name="vec-src"></a><a href="https://doc.rust-lang.org/src/alloc/up/src/liballoc/raw_vec.rs.html#212"> Rust source for Vec</a></p>
+          <p><sup><a href="#vector-unsafety-gist-back">4</a></sup><a name="vector-unsafety-gist"></a> Play around with this bug on the <a href="https://is.gd/o39azP">playground</a></p>
       </footer>
     </section>
   </body>

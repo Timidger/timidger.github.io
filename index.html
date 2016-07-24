@@ -113,6 +113,7 @@
     }
 }</code></pre>
           <p>Now, thanks to RAII, there is no way for a child to have a dangling reference to a parent that was removed. Excellent! We solved the memory unsafety right?</p>
+          <h4>Guaranteeing memory safety is hard</h4>
           <p>Unfortunately, no. This unsafe abstraction is very leaky. A node borrowed as mutable is no longer checked by the borrow checker, since it passes through the unsafe raw pointer to get a reference to itself.  </p>
           <pre><code>    /// Attempts to get the Node as a mutable reference by going through it's parent
     ///
@@ -149,12 +150,26 @@ pub fn remove_from_parent(&mut self) -> Option&ltNode&gt {
     self.parent = ptr::null_mut();
     maybe_node
 }</code></pre>
-          <p>The bug is on the line where we remove ourselves and move the value into <code>maybe_node</code>. The <code>Node</code> we are moving is the same <code>Node</code> pointed to by <code>self</code>, so after the removal <code>self</code> will be a dangling pointer. In practice, this means that when we set the parent to be <code>ptr::null_mut()</code> after the removal we are actually setting the sibling of the original node's parent since when we remove the node the vector moves all of the elements over to the left.<sup><a href="#vector-unsafety-gist" name="vector-unsafety-gist-back">4</sup></p>
+          <p>The bug is on the line where we remove ourselves and move the value into <code>maybe_node</code>. The <code>Node</code> we are moving is the same <code>Node</code> pointed to by <code>self</code>, so after the removal <code>self</code> will be a dangling pointer. In practice, this means that when we set the parent to be <code>ptr::null_mut()</code> after the removal we are actually setting the sibling of the original node's parent since when we remove the node the vector moves all of the elements over to the left.<sup><a href="#vector-unsafety-gist" name="vector-unsafety-gist-back">3</a></sup></p>
+          <p>What about the next function? This one is more tricky to spot and is actually a bug with our <code>Vec</code>.</p>
+          <pre><code>struct Node {
+    parent: *mut Node,
+    children: Vec&ltNode&gt
+}
+
+impl Node {
+    fn add_child(&mut self, mut child: Node) {
+        child.parent = self;
+        self.children.push(child);
+    }
+}</code></pre>
+          <p>When a <code>Vec</code>'s capacity is reached it is automatically reallocated to have double the capacity.<sup><a name="vec-src-back" href="#vec-src">4</a></sup>. When that happens, any references/pointers to the data in the original vector become dangling since every <code>Node</code> in the vector was moved to the new one. To fix this, you'd either have to change your data structure to something that doesn't reallocate when the capacity is reached (such as a linked list) or you have to constantly re-validate the sibling's parent pointers whenever you add a child to a <code>Node</code>.<sup><a href="#vector-resize-gist" name="vector-resize-gist-back">5</a></sup></p>
       <footer class="site-footer">
           <p><sup><a href="#weak-parent-back">1</a></sup><a name="weak-parent"></a> Note that we can not have both the parents and the children be reference counted, otherwise that would create a cycle and consequentally a memory leak.</p>
           <p><sup><a href="#smart-pointer-tree-code-back">2</a></sup><a name="smart-pointer-tree-code"></a> Here's a link to the <a href="https://github.com/Immington-Industries/way-cooler/blob/7e22199bd57e9286a74c98e2b829a0ace72ecadd/src/layout/containers.rs">full code</a>, if you'd like to see just how nasty it can get.</p>
-          <p><sup><a href="#vec-src-back">3</a></sup><a name="vec-src"></a><a href="https://doc.rust-lang.org/src/alloc/up/src/liballoc/raw_vec.rs.html#212"> Rust source for Vec</a></p>
-          <p><sup><a href="#vector-unsafety-gist-back">4</a></sup><a name="vector-unsafety-gist"></a> Play around with this bug on the <a href="https://is.gd/o39azP">playground</a></p>
+          <p><sup><a href="#vector-unsafety-gist-back">3</a></sup><a name="vector-unsafety-gist"></a> Play around with the inconsistent <code>self</code> bug <a href="https://is.gd/o39azP">here</a></p>
+          <p><sup><a href="#vec-src-back">4</a></sup><a name="vec-src"></a><a href="https://doc.rust-lang.org/src/alloc/up/src/liballoc/raw_vec.rs.html#212"> Rust source for Vec</a></p>
+          <p><sup><a href="#vector-resize-gist-back">5</a></sup><a name="vector-resize-gist"></a> Play around with the vector invalidation bug <a href="https://is.gd/hyKV6F">here</a></p>
       </footer>
     </section>
   </body>

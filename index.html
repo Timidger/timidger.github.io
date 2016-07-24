@@ -56,7 +56,6 @@
           <p>Even for such a simple example, it's obvious that this is going to get very tedious. Here's a direct example from our old code for adding new containers, which has more complicated logic. Don't worry about understanding it, just notice how many explicit drops and <code>borrow_mut</code>'s are needed.<sup><a name="smart-pointer-tree-code-back" href="#smart-pointer-tree-code">2</a></sup></p>
           <pre><code>    pub fn new_container(parent_: &mut Node, mut layout: Layout) -> Node {
         let mut parent = parent_.borrow_mut();
-        // NOTE Make sure we do all of the Container specific init stuff
         let container = Rc::new(RefCell::new(Container {
             parent: Some(Rc::downgrade(&parent_)),
             children: vec!(),

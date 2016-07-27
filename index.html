@@ -14,16 +14,17 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">A Pragmatic Place</h1>
+      <h3 class="author-name"><a href="https://github.com/timidger">Preston Carpenter</a></h3>
       <h2 class="project-tagline">Sacrificing purity for practicality</h2>
     </section>
 
     <section class="main-content">
       <h3>
           <a id="designing-a-mutable-bi-directional-tree-safely-in-rust" class="anchor" href="#designing-a-bi-mutable-directional-tree-safely-in-rust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Designing a mutable bi-directional tree safely in Rust</h3>
-      <p>While designing <a href="https://github.com/Immington-Industries/way-cooler">Way Cooler</a>, it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the <a href="http://dwm.suckless.org/">different</a> <a href="https://awesome.naquadah.org/">tiling</a> <a href="http://i3wm.org/">window</a> <a href="http://xmonad.org/">managers</a> for X, it becomes aparent that there is no one-size-fits-all method. Since one of the primary goals of Way Cooler is to be as customizable as possible, we want the user to choose the method that works best for them.</p>
-      <p>Since the window manager I'm most familiar and comfortable with is i3, I decided to implement that first. i3 manages the windows on the screen by constructing a <a href="http://i3wm.org/docs/userguide.html#_tree">virtual tree</a> that the user can manipulate by adding containers and switching how each container lays out its children. Unlike Awesome's static layout templates or Xmonad's non-structured horizontal/vertical/fullscreen tiling, i3 lets you construct a layout yourself. Since i3's commands are so simple, it will be trivial to either augment them or strip them away completely when we offer more tiling options to the user.</p>
+      <p>While designing <a href="https://github.com/Immington-Industries/way-cooler">Way Cooler</a>, it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the <a href="http://dwm.suckless.org/">different</a> <a href="https://awesome.naquadah.org/">tiling</a> <a href="http://i3wm.org/">window</a> <a href="http://xmonad.org/">managers</a> for X, it becomes apparent that there is no one-size-fits-all method. One of the primary goals of Way Cooler is to be as customizable as possible, so we want the user to choose the method that works best for them.</p>
+      <p>Since the window manager I'm most familiar and comfortable with is i3, I decided to implement that first. i3 manages the windows on the screen by constructing a <a href="http://i3wm.org/docs/userguide.html#_tree">virtual tree</a> that the user can manipulate by adding containers and switching how each container lays out its children. Unlike Awesome's static layout templates or Xmonad's non-structured horizontal/vertical/fullscreen tiling, i3 lets you construct a layout yourself. i3's commands are so simple, therefore it will be trivial to either augment them or strip them away completely when we offer more tiling options to the user.</p>
       <h4>Designing the data definition using smart pointers</h4>
-      <p><a href="https://www.rust-lang.org/en-US/">Rust</a>, our language of choice for Way Cooler, encourages a data-orientated approach to programming. Since our tree had to be flexible enough to accommodate all these different tiling styles, our data structure had to be designed to be as flexible as possible. After taking a good long look at the i3 docs, we came up with the following structure for a node in the tree:</p>
+      <p><a href="https://www.rust-lang.org/en-US/">Rust</a>, our language of choice for Way Cooler, encourages a data-orientated approach to programming. Since our tree had to be flexible enough to accommodate all these different tiling styles, our data structure had to be designed to be as flexible as possible. After taking a good long look at the i3 docs, we came up with the following structure for a <code>node</code> in the tree:</p>
       <pre><code class="Rust">pub struct Node {
      parent: Option&ltWeak&ltRefCell&ltNode&gt&gt&gt,
      children: Vec&ltRc&ltRefCell&ltNode&gt&gt&gt,
@@ -36,16 +37,16 @@
           <p> Ok, that was a lot to take in, but it's not too bad when you look at it from a 10,000 foot view. To recap:</p>
                   <ul>
                       <li>
-                          A <code>Node</code> has a parent <code>Node</code> and an arbitrary number of children nodes.
+                          A <code>Node</code> has a parent <code>Node</code> and an arbitrary number of children <code>Node</code>s.
                       </li>
                       <li>
-                          The parent node may or may not exist, depending on if we are at the top of the tree.
+                          The parent <code>Node</code> may or may not exist, depending on if we are at the top of the tree.
                       </li>
                       <li>
-                          A node owns its children and needs to check if it is still part of the tree whenever it traverses up through its parent.
+                          A <code>Node</code> owns its children and needs to check if it is still part of the tree whenever it traverses up through its parent.
                       </li>
                       <li>
-                          Since we want to select portions of the tree to be mutable, each node must be wrapped in a <code>RefCell</code> to avoid borrow checker complaints.
+                          Finally we use a <code>RefCell</code> to put the borrow checking at runtime because we cannot statically verify the safety of the tree.
                       </li>
                   </ul>
           <p>Alright, lets see what some code using this data structure looks like. Lets look at something simple, like adding a child <code>Node</code> to an already existing <code>Node</code>.</p>
@@ -86,7 +87,7 @@
 }</code></pre>
           <p>This tree, though memory safe, is very tedious to use and could fall apart at any time if we forget to drop a <code>RefCell</code> before trying to borrow it again. It also wouldn't be easy to extend to work with the other tiling methods that we want to support. What we need is a way to mutate part of the tree without the need for <code>RefCell</code>.</p>
           <h4>Gaining flexibility with custom unsafe abstractions</h4>
-          <p>Since Rust is a systems programming language it gives us the tools to make our own safe abstractions. Raw pointers (<code>*const</code> and <code>*mut</code>) are like references but they do not check the special borrow checker rules at compile time. It's up to the programmer to ensure that these rules are enforced in his code. The rules themselves are very simple, but can be tricky to get right:</p>
+          <p>Because Rust is a systems programming language it gives us the tools to make our own safe abstractions. Raw pointers (<code>*const</code> and <code>*mut</code>) are like references but they do not check the special borrow checker rules at compile time. It's up to the programmer to ensure that these rules are enforced in his code. The rules themselves are very simple, but can be tricky to get right:</p>
               <ul>
                   <li>
                       One or more references (<code>&T</code>) to a resource
@@ -101,7 +102,7 @@
     children: Vec&ltNode&gt
 }</code></pre>
           <p>This is much better looking, though now we need to ensure that we are following those rules manually.</p>
-          <p>Since a node can have an arbitrary number of children and each node needs to have a <code>*mut</code> to its parent, there can be an arbitrary number of raw mutable pointers to the same resource. This is bad but fixable. Since nodes own their children (they are moved into the <code>Vec</code> and are no longer behind an <code>Rc</code>) whenever we delete a node all of its children are immediantly dropped as well. To ensure that there is absolutely no way a child can point to a removed parent, we'll override <code>Drop</code> for <code>Node</code>:</p>
+          <p>Since a <code>Node</code> can have an arbitrary number of children and each <code>Node</code> needs to have a <code>*mut</code> to its parent, there can be an arbitrary number of raw mutable pointers to the same resource. This is bad but fixable. Since <code>Node</code>s own their children (they are moved into the <code>Vec</code> and are no longer behind an <code>Rc</code>) whenever we delete a <code>Node</code> all of its children are immediately dropped as well. To ensure that there is absolutely no way a child can point to a removed parent, we'll override <code>Drop</code> for <code>Node</code>:</p>
           <pre><code>impl Drop for Node {
     fn drop(&mut self) {
         let children: &mut Vec&ltNode&gt = &mut self.children;
@@ -112,7 +113,7 @@
 }</code></pre>
           <p>Now, thanks to RAII, there is no way for a child to have a dangling reference to a parent that was removed. Excellent! We solved the memory unsafety right?</p>
           <h4>Guaranteeing memory safety is hard</h4>
-          <p>Unfortunately, no. This unsafe abstraction is very leaky. A node borrowed as mutable is no longer checked by the borrow checker, since it passes through the unsafe raw pointer to get a reference to itself.  </p>
+          <p>Unfortunately, no. This unsafe abstraction is very leaky. A <code>Node</code> borrowed as mutable is no longer checked by the borrow checker, since it passes through the unsafe raw pointer to get a reference to itself.  </p>
           <pre><code>    /// Attempts to get the Node as a mutable reference by going through it's parent
     ///
     /// # Unsafety
@@ -148,7 +149,7 @@ pub fn remove_from_parent(&mut self) -> Option&ltNode&gt {
     self.parent = ptr::null_mut();
     maybe_node
 }</code></pre>
-          <p>The bug is on the line where we remove ourselves and move the value into <code>maybe_node</code>. The <code>Node</code> we are moving is the same <code>Node</code> pointed to by <code>self</code>, so after the removal <code>self</code> will be a dangling pointer. In practice, this means that when we set the parent to be <code>ptr::null_mut()</code> after the removal we are actually setting the sibling of the original node's parent since when we remove the node the vector moves all of the elements over to the left.<sup><a href="#vector-unsafety-gist" name="vector-unsafety-gist-back">3</a></sup></p>
+          <p>The bug is on the line where we remove ourselves and move the value into <code>maybe_node</code>. The <code>Node</code> we are moving is the same <code>Node</code> pointed to by <code>self</code>, so after the removal <code>self</code> will be a dangling pointer. In practice, this means that when we set the parent to be <code>ptr::null_mut()</code> after the removal we are actually setting the sibling of the original <code>Node</code>'s parent since when we remove the <code>Node</code> the vector moves all of the elements over to the left.<sup><a href="#vector-unsafety-gist" name="vector-unsafety-gist-back">3</a></sup></p>
           <p>What about the next function? This one is more tricky to spot and is actually a bug with our <code>Vec</code>.</p>
           <pre><code>struct Node {
     parent: *mut Node,
@@ -163,7 +164,7 @@ impl Node {
 }</code></pre>
           <p>When a <code>Vec</code>'s capacity is reached it is automatically reallocated to have double the capacity.<sup><a name="vec-src-back" href="#vec-src">4</a></sup>. When that happens, any references/pointers to the data in the original vector become dangling since every <code>Node</code> in the vector was moved to the new one. To fix this, you'd either have to change your data structure to something that doesn't reallocate when the capacity is reached (such as a linked list) or you have to constantly re-validate the sibling's parent pointers whenever you add a child to a <code>Node</code>.<sup><a href="#vector-resize-gist" name="vector-resize-gist-back">5</a></sup></p>
           <h4>Petgraph to the rescue!</h4>
-          <p>Right now, there is no crate that provides a tree with all the features that we need for Way Cooler. Hopefully there will be one in the future, maybe one provided by us. Currently, Way Cooler uses <a href="https://crates.io/crates/petgraph">petgraph</a> for a tree. We have an adapater module that maps graph operations to tree operations. In a way, it's just like using an adjacency list, and what a "proper" tree would probably look like in Rust. <code>Node</code> removals are still something that needs to be carefully managed, but there is no longer the possiblity of a segfault in the tiling code for Way Cooler.</p>
+          <p>Right now, there is no crate that provides a tree with all the features that we need for Way Cooler. Hopefully there will be one in the future, maybe one provided by us. Currently, Way Cooler uses <a href="https://crates.io/crates/petgraph">petgraph</a> for a tree. We have an adapter module that maps graph operations to tree operations. In a way, it's just like using an adjacency list, and what a "proper" tree would probably look like in Rust. <code>Node</code> removals are still something that needs to be carefully managed, but there is no longer the possibility of a segfault in the tiling code for Way Cooler.</p>
           <p>Though Rust is still a very new systems language, its benefits are already showing. If this had been written in C (like most window managers are today) we would have been forced to using linked lists, which are less cache-efficient than standard array/vector data structures, and raw pointers, which are difficult to work with and could cause a segfault if not managed carefully. The library ecosystem is still very young and it's a shame that there is no reliable standard tree data structure on crates.io yet, but that should hopefully change in the coming years as Rust gains in popularity.
       <footer class="site-footer">
           <p><sup><a href="#weak-parent-back">1</a></sup><a name="weak-parent"></a> Note that we can not have both the parents and the children be reference counted, otherwise that would create a cycle and consequentially a memory leak.</p>

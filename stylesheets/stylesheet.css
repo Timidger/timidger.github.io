@@ -116,6 +116,9 @@ a {
   font-weight: normal;
   color: black;
 }
+.main-content h3 {
+    text-align: center;
+}
 .main-content p {
   margin-bottom: 1em; }
 .main-content code {

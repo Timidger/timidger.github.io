@@ -81,6 +81,15 @@ h6 {
 }
 
 @include breakpoint(small) {
+  .header-links {
+    display: inline-flex !important;
+  }
+  .top-bit {
+    display: inherit !important;
+  }
+  .side-bar {
+    display: none !important;
+  }
   h1 {
     font-size: $base-font-size * 1.5;
   }
@@ -163,7 +172,7 @@ img {
 }
 
 .main-content {
-    display: inline-flex !important;
+    display: inline-flex;
     width: 100% !important;
 }
 

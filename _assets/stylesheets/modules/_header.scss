@@ -18,6 +18,7 @@
 }
 
 .header-links {
+  display: inline-flex;
   float: right;
   padding: 0;
   margin: 15px 0 0;
@@ -26,9 +27,6 @@
     display: inline-block;
     margin-left: 20px;
     vertical-align: middle;
-    &:first-child {
-      margin-left: 0;
-    }
     a {
       font-size: 18px;
       color: $header-link-color;

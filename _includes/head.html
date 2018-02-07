@@ -15,10 +15,6 @@
   <meta name="twitter:title" content="{{ page.title | escape }}">
   <meta name="twitter:description" content="{{ page.description }}">
 
-  <link rel="stylesheet" href="/assets/github-gist.css">
-  <script src="/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
-
   {% if page.thumb_image %}
     {% if page.thumb_image contains '://' %}
       <meta property="og:image" content="{{ page.thumb_image }}">

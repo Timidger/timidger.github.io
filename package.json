@@ -1,0 +1,11 @@
+{
+  "name": "chalk",
+  "dependencies": {
+    "fluidbox": "^2.0.5",
+    "jquery": "^3.2.1",
+    "retinajs": "^2.1.1",
+    "svgxuse": "^1.2.4",
+    "throttle-debounce-fn": "^1.0.1",
+    "webfontloader": "^1.6.28"
+  }
+}

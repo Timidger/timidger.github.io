@@ -153,3 +153,46 @@ img {
   color: $white;
   background-color: $gray-darkest;
 }
+
+.main-layout {
+    display: block;
+    font-size: 0;
+    text-align: left;
+    padding: 0px;
+    margin: 0px 0px 0px 0px;
+}
+
+#main-content {
+    display: inline-flex !important;
+    width: 100%;
+}
+
+.links-cell {
+    width: 33% !important;
+    border-left: 1px solid #ebeaea;
+}
+
+.side-links {
+    float: right;
+    padding: 0;
+    margin: 15px 0 0;
+    list-style: none;
+    li {
+        display: inline-block;
+        margin-left: 20px;
+        vertical-align: middle;
+        margin-left: 0;
+        a {
+            font-size: 18px;
+            color: $header-link-color;
+            svg {
+                width: 16px;
+                height: 16px;
+                fill: $header-link-color;
+            }
+            &:hover svg {
+                fill: $header-link-color-hover;
+            }
+        }
+    }
+}

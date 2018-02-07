@@ -173,15 +173,15 @@ img {
 }
 
 .side-links {
-    float: right;
+    float: left;
     padding: 0;
     margin: 15px 0 0;
     list-style: none;
+    display: grid;
     li {
         display: inline-block;
-        margin-left: 20px;
         vertical-align: middle;
-        margin-left: 0;
+        margin-left: 0px;
         a {
             font-size: 18px;
             color: $header-link-color;

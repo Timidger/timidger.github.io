@@ -19,7 +19,7 @@
 .highlighter-rouge {
   padding: 2px 4px;
   font-size: 14px;
-  color: #d14;
+  color: #000000;
   background: lighten($gray-lightest, 6);
   border: 1px solid $base-border-color;
   border-radius: 1px;
@@ -48,7 +48,7 @@
 // Error
 
 .highlight .err {
-  color: #a61717;
+  color: #000000;
   background-color: #e3d2d2;
 }
 
@@ -209,7 +209,7 @@
 // Literal.String
 
 .highlight .s {
-  color: #d14;
+  color: #000000;
 }
 
 // Name.Attribute
@@ -247,14 +247,14 @@
 
 .highlight .ne {
   font-weight: bold;
-  color: #900;
+  color: #009;
 }
 
 // Name.Function
 
 .highlight .nf {
   font-weight: bold;
-  color: #900;
+  color: #009;
 }
 
 // Name.Namespace
@@ -314,49 +314,49 @@
 // Literal.String.Backtick
 
 .highlight .sb {
-  color: #d14;
+  color: #000000;
 }
 
 // Literal.String.Char
 
 .highlight .sc {
-  color: #d14;
+  color: #000000;
 }
 
 // Literal.String.Doc
 
 .highlight .sd {
-  color: #d14;
+  color: #000000;
 }
 
 // Literal.String.Double
 
 .highlight .s2 {
-  color: #d14;
+  color: #000000;
 }
 
 // Literal.String.Escape
 
 .highlight .se {
-  color: #d14;
+  color: #000000;
 }
 
 // Literal.String.Heredoc
 
 .highlight .sh {
-  color: #d14;
+  color: #000000;
 }
 
 // Literal.String.Interpol
 
 .highlight .si {
-  color: #d14;
+  color: #000000;
 }
 
 // Literal.String.Other
 
 .highlight .sx {
-  color: #d14;
+  color: #000000;
 }
 
 // Literal.String.Regex
@@ -368,7 +368,7 @@
 // Literal.String.Single
 
 .highlight .s1 {
-  color: #d14;
+  color: #000000;
 }
 
 // Literal.String.Symbol

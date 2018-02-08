@@ -164,7 +164,7 @@ pub fn remove_from_parent(&mut self) -> Option<Node> {
     self.parent = ptr::null_mut();
     maybe_node
 }
-```rust
+```
 
 The bug is on the line where we set `maybe_node` to `Some(parent.children.remove(index))`. The `Node` we are moving into `maybe_node` is the same `Node` pointed to by `self` so after the removal `self` will be a dangling pointer. In practice, this means that when we set the parent to be `ptr::null_mut()` after the removal we are actually setting the sibling of the original `Node`'s parent since when we remove the `Node` the vector moves all of the elements over to the left.<sup><a href="#vector-unsafety-gist" name="vector-unsafety-gist-back">4</a></sup>
 

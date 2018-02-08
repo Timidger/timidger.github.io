@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://timidger.github.io/tag/design/</loc>
+<lastmod>2018-02-07T19:03:37-05:00</lastmod>
+</url>
+<url>
+<loc>https://timidger.github.io/tag/jekyll/</loc>
+<lastmod>2018-02-07T19:03:37-05:00</lastmod>
+</url>
+<url>
+<loc>https://timidger.github.io/tag/web/</loc>
+<lastmod>2018-02-07T19:03:37-05:00</lastmod>
+</url>
+<url>
+<loc>https://timidger.github.io/posts/designing-a-bi-mutable-directional-tree-safely-in-rust</loc>
+<lastmod>2016-08-14T00:00:00-04:00</lastmod>
+</url>
+<url>
+<loc>https://timidger.github.io/about</loc>
+</url>
+<url>
+<loc>https://timidger.github.io/</loc>
+</url>
+</urlset>

@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Preston Carpenter's Blog | Designing a mutable bi-directional tree safely in Rust</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="Designing a mutable bi-directional tree safely in Rust">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://timidger.github.io/posts/designing-a-bi-mutable-directional-tree-safely-in-rust">
+  <meta property="og:description" content="">
+  <meta property="og:site_name" content="Preston Carpenter's Blog">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="https://timidger.github.io/posts/designing-a-bi-mutable-directional-tree-safely-in-rust">
+  <meta name="twitter:title" content="Designing a mutable bi-directional tree safely in Rust">
+  <meta name="twitter:description" content="">
+
+  
+    <meta property="og:image" content="https://timidger.github.io/assets/og-image-ee46bbc61b334e821e81534b1fd43f3fee6f020ec174b3c2114445695fd48c01.jpg">
+    <meta name="twitter:image" content="https://timidger.github.io/assets/og-image-ee46bbc61b334e821e81534b1fd43f3fee6f020ec174b3c2114445695fd48c01.jpg">
+  
+
+  <link href="https://timidger.github.io/feed.xml" type="application/rss+xml" rel="alternate" title="Preston Carpenter's Blog Last 10 blog posts" />
+
+  
+    <link rel="stylesheet" type="text/css" href="/assets/fonts-5714d00e8bde3c6b5afa12217e2ee074d34dd67cc505fa419382000ad86e60dd.css">
+  
+
+  
+    <link rel="icon" type="image/x-icon" href="/assets/favicon-light-a98c41efc5ed9fcc06ac664c9e2f7a9b3c3b2e0a52357d221fe382f6f4abc8fc.ico">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon-light-87d1f2a3a19b1500e5c1626a0492025ca5f7f97d24540dc5900288e92112925a.png">
+    <link rel="stylesheet" type="text/css" href="/assets/light-11ed68757983bef293f34cda57c91d65d21c9d6d7211e7e9abe128c5cfc64db5.css">
+  
+</head>
+
+<body>
+  <main>
+    <div class="main-layout">
+      <div class="grid-cell">
+        <nav class="header-nav scrollappear">
+    <div class="grid-cell">
+      <div class="main-content top-bit">
+        <div class="grid-centered grid-cell main-content">
+          <a href="/" class="header-logo" title="Preston Carpenter's Blog" style="">
+            Preston Carpenter's Blog
+          </a>
+        </div>
+        <div class="grid-cell upper-links-cell">
+          <ul class="header-links">
+              
+              <li>
+                  <a href="/about" title="About me">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-about">
+  <use href="/assets/about-ecf154b571ab8034ae00aeed91a3b7ad68db80b46d958753ad6216c919486e88.svg#icon-about" xlink:href="/assets/about-ecf154b571ab8034ae00aeed91a3b7ad68db80b46d958753ad6216c919486e88.svg#icon-about"></use>
+</svg>
+
+                  </a>
+              </li>
+              
+              
+              <li>
+                  <a href="https://twitter.com/timidger" rel="noreferrer noopener" target="_blank" title="Twitter">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-twitter">
+  <use href="/assets/twitter-8842c33965263ad1b03a978406826677a668f94125d5837e70ab83f24b3213a7.svg#icon-twitter" xlink:href="/assets/twitter-8842c33965263ad1b03a978406826677a668f94125d5837e70ab83f24b3213a7.svg#icon-twitter"></use>
+</svg>
+
+                  </a>
+              </li>
+              
+              
+              
+              
+              <li>
+                  <a href="https://github.com/timidger" rel="noreferrer noopener" target="_blank" title="GitHub">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-github">
+  <use href="/assets/github-094f81040819f34343ee6ffff0980f17e2807b08b595eaaf66ae3554934fd78d.svg#icon-github" xlink:href="/assets/github-094f81040819f34343ee6ffff0980f17e2807b08b595eaaf66ae3554934fd78d.svg#icon-github"></use>
+</svg>
+
+                  </a>
+              </li>
+              
+              
+              
+              
+              <li>
+                  <a href="https://stackoverflow.com/users/timidger" rel="noreferrer noopener" target="_blank" title="Stack Overflow">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-stackoverflow">
+  <use href="/assets/stackoverflow-12ba59133ed134d26156d30f095e0222b6039395cf26f2fab0cb6ce3ef2db00d.svg#icon-stackoverflow" xlink:href="/assets/stackoverflow-12ba59133ed134d26156d30f095e0222b6039395cf26f2fab0cb6ce3ef2db00d.svg#icon-stackoverflow"></use>
+</svg>
+
+                  </a>
+              </li>
+              
+              
+              
+              
+              <li>
+                  <a href="https://www.linkedin.com/in/timidger" rel="noreferrer noopener" target="_blank" title="LinkedIn">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-linkedin">
+  <use href="/assets/linkedin-cdc5c107044324a3dfbea2e9ead15873f8dee304c37d73a046988956b706256e.svg#icon-linkedin" xlink:href="/assets/linkedin-cdc5c107044324a3dfbea2e9ead15873f8dee304c37d73a046988956b706256e.svg#icon-linkedin"></use>
+</svg>
+
+                  </a>
+              </li>
+              
+              
+              
+              
+              
+              
+              
+              <li>
+                  <a href="https://www.youtube.com/user/timidger" rel="noreferrer noopener" target="_blank" title="Youtube">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-youtube">
+  <use href="/assets/youtube-e8aaee4449ebf16dda44d55c8f82df4e40f62ca5b3edc8a34fe71707eb9cf990.svg#icon-youtube" xlink:href="/assets/youtube-e8aaee4449ebf16dda44d55c8f82df4e40f62ca5b3edc8a34fe71707eb9cf990.svg#icon-youtube"></use>
+</svg>
+
+                  </a>
+              </li>
+              
+              
+              
+              
+              
+              <li>
+                  <a href="https://blockexplorer.com/address/17xhNzgu8b5P28ho3iokfTrPCtVnrWoa52" rel="noreferrer noopener" target="_blank" title="Bitcoin">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-bitcoin">
+  <use href="/assets/bitcoin-5b11c4ea91819f58e20217dfecd78cbb5c0f33928455c3b00485daaac83f433e.svg#icon-bitcoin" xlink:href="/assets/bitcoin-5b11c4ea91819f58e20217dfecd78cbb5c0f33928455c3b00485daaac83f433e.svg#icon-bitcoin"></use>
+</svg>
+
+                  </a>
+              </li>
+              
+              
+              
+              <li>
+                  <a href="mailto:APragmaticPlace@gmail.com" title="Email">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-email">
+  <use href="/assets/email-782473193bf750036fdb90e8daa075508a20509d01854c09f3237c144a3f0601.svg#icon-email" xlink:href="/assets/email-782473193bf750036fdb90e8daa075508a20509d01854c09f3237c144a3f0601.svg#icon-email"></use>
+</svg>
+
+                  </a>
+              </li>
+              
+              
+          </ul>
+        </div>
+      </div>
+  </div>
+</nav>
+
+          <div class="main-content">
+            <div class="grid-cell grid-centered main-content">
+              <article class="article scrollappear">
+                <header class="article-header">
+                  <h1>Designing a mutable bi-directional tree safely in Rust</h1>
+                  <p></p>
+                  <div class="article-list-footer">
+                    <span class="article-list-date">
+                      August 14, 2016
+                    </span>
+                    <span class="article-list-divider">-</span>
+                    <span class="article-list-minutes">
+                      
+                      
+                        12 minute read
+                      
+                    </span>
+                    <span class="article-list-divider">-</span>
+                    <div class="article-list-tags">
+                      
+                    </div>
+                  </div>
+                </header>
+
+                <div class="article-content">
+                  <p>While designing <a href="https://github.com/Immington-Industries/way-cooler">Way Cooler</a>, it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the <a href="http://dwm.suckless.org/">different</a> <a href="https://awesome.naquadah.org/">tiling</a> <a href="http://i3wm.org/">window</a> <a href="http://xmonad.org/">managers</a> for X, it becomes apparent that there is no one-size-fits-all method. One of the primary goals of Way Cooler is to be as customizable as possible, so we want the user to choose the method that works best for them.</p>
+
+<p>Since the window manager I’m most familiar and comfortable with is i3, I decided to implement that first. i3 manages the windows on the screen by constructing a <a href="http://i3wm.org/docs/userguide.html#_tree">virtual tree</a> that the user can manipulate by adding containers and switching how each container lays out its children. Unlike Awesome’s static layout templates or Xmonad’s non-structured horizontal/vertical/fullscreen tiling, i3 lets you construct a layout yourself. i3’s commands are so simple, therefore it will be trivial to either augment them or strip them away completely when we offer more tiling options to the user.</p>
+
+<h2 id="designing-the-data-definition-using-smart-pointers">Designing the data definition using smart pointers</h2>
+<p><a href="https://www.rust-lang.org/en-US/">Rust</a>, our language of choice for Way Cooler, encourages a data-orientated approach to programming. Since our tree had to be flexible enough to accommodate all these different tiling styles, our data structure had to be designed to be as flexible as possible. After taking a good long look at the i3 docs, we came up with the following structure for a node in the tree:</p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">pub</span> <span class="k">struct</span> <span class="n">Node</span> <span class="p">{</span>
+    <span class="n">parent</span><span class="p">:</span> <span class="nb">Option</span><span class="o">&lt;</span><span class="n">Weak</span><span class="o">&lt;</span><span class="n">RefCell</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span>
+    <span class="n">children</span><span class="p">:</span> <span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">Rc</span><span class="o">&lt;</span><span class="n">RefCell</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span>
+    <span class="c">// eliding other fields</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Needless to say, those fields are very complicated. What are all those wrappers doing? Lets break it down and see just what kind of a mess we’ve gotten ourselves into.</p>
+
+<p>A parent is wrapped in an <a href="https://doc.rust-lang.org/std/option/enum.Option.html">Option</a> because it’s possible for the <code class="highlighter-rouge">Node</code> to be the root of the tree, which doesn’t have a parent. We could define our tree so that the root just refers to itself, but not only can that be messy <a href="http://stackoverflow.com/questions/32300132/why-cant-i-store-a-value-and-a-reference-to-that-value-in-the-same-struct">if we change to bare references</a>, it also doesn’t force us to check if we have exhausted our search of the tree.</p>
+
+<p>Next is <a href="https://doc.rust-lang.org/std/rc/struct.Rc.html"><code class="highlighter-rouge">Rc</code></a> and <a href="https://doc.rust-lang.org/std/rc/struct.Weak.html"><code class="highlighter-rouge">Weak</code></a>. These types are actually referring to the same thing: a reference counted smart pointer. We can’t use bare references here because Rust won’t let us modify the tree and invalidate its internal references to itself because that would be unsafe.  When you <code class="highlighter-rouge">.clone())</code> an <code class="highlighter-rouge">Rc</code>, instead of copying the underlying value it increments an internal counter and lets us happily use and destroy the <code class="highlighter-rouge">Rc</code> because all we have is a pointer to the data. The value behind the pointer is only dropped when the counter reaches 0, so an <code class="highlighter-rouge">Rc</code> will never attempt to access a dangling pointer.</p>
+
+<p>When an <code class="highlighter-rouge">Rc</code> is downgraded to a <code class="highlighter-rouge">Weak</code> it decrements the reference count but keeps the pointer to the value in the <code class="highlighter-rouge">Weak</code>. Whenever you try to dereference the <code class="highlighter-rouge">Weak</code>, you have to check if it still exists since your reference isn’t keeping it alive anymore. So whenever you move up the tree you have to check if your branch is still part of the tree.<sup><a name="weak-parent-back" href="#weak-parent">1</a></sup></p>
+
+<p>A <a href="https://doc.rust-lang.org/std/cell/struct.RefCell.html"><code class="highlighter-rouge">RefCell</code></a> is used whenever you want to be able to mutate a field of a struct but you are unable or unwilling to own or mutably borrow the whole struct. Since we are constructing a tree, most of our operations are defined recursively, which means we can’t mutably borrow a container and its children at the same time. The borrow checker will infer that because we have a reference to a <code class="highlighter-rouge">Node</code> and a child of that <code class="highlighter-rouge">Node</code>, we could hypothetically delete the parent <code class="highlighter-rouge">Node</code> and cause our reference to become a dangling pointer.</p>
+
+<p>This is a very helpful and powerful smart pointer, but it comes with a huge cost. All of the borrow checking rules will now happen at run time, where a non-unique mutable borrow will cause a panic. This makes it very easy to write invalid code because the compiler won’t tell us we are making a mistake until it blows up in our face.</p>
+
+<p>Ok, that was a lot to take in, but it’s not too bad when you look at it from a 10,000 foot view. To recap:</p>
+<ul>
+  <li>A <code class="highlighter-rouge">Node</code> has a parent <code class="highlighter-rouge">Node</code> and an arbitrary number of children <code class="highlighter-rouge">Node.</code></li>
+  <li>The parent <code class="highlighter-rouge">Node</code> may or may not exist, depending on if we are at the top of the tree.</li>
+  <li>A <code class="highlighter-rouge">Node</code> owns its children and needs to check if it is still part of the tree whenever it traverses up through its parent.</li>
+  <li>Finally we use a <code class="highlighter-rouge">RefCell</code> to put the borrow checking at runtime because we cannot statically verify the safety of the tree.</li>
+</ul>
+
+<p>Alright, lets see what some code using this data structure looks like. Lets look at something simple, like adding a child <code class="highlighter-rouge">Node</code> to an already existing <code class="highlighter-rouge">Node</code></p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">pub</span> <span class="k">fn</span> <span class="nf">add_child</span><span class="p">(</span><span class="n">parent</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">child</span><span class="p">:</span> <span class="n">Node</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">child</span><span class="nf">.borrow_mut</span><span class="p">()</span><span class="nf">.set_parent</span><span class="p">(</span><span class="nn">Rc</span><span class="p">::</span><span class="nf">downgrade</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parent</span><span class="nf">.clone</span><span class="p">()));</span>
+    <span class="n">parent</span><span class="nf">.borrow_mut</span><span class="p">()</span><span class="py">.children</span><span class="nf">.push</span><span class="p">(</span><span class="n">child</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Even for such a simple example, it’s obvious that this is going to get very tedious. Here’s a direct example from our old code for adding new containers, which has more complicated logic. Don’t worry about understanding it, just notice how many explicit drops and <code class="highlighter-rouge">borrow_mut</code>’s are needed.<sup><a name="smart-pointer-tree-code-back" href="#smart-pointer-tree-code">2</a></sup></p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">pub</span> <span class="k">fn</span> <span class="nf">new_container</span><span class="p">(</span><span class="n">parent_</span><span class="p">:</span> <span class="o">&amp;</span><span class="k">mut</span> <span class="n">Node</span><span class="p">,</span> <span class="k">mut</span> <span class="n">layout</span><span class="p">:</span> <span class="n">Layout</span><span class="p">)</span> <span class="k">-&gt;</span> <span class="n">Node</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="k">mut</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">parent_</span><span class="nf">.borrow_mut</span><span class="p">();</span>
+    <span class="k">let</span> <span class="n">container</span> <span class="o">=</span> <span class="nn">Rc</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="nn">RefCell</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="n">Container</span> <span class="p">{</span>
+        <span class="n">parent</span><span class="p">:</span> <span class="nf">Some</span><span class="p">(</span><span class="nn">Rc</span><span class="p">::</span><span class="nf">downgrade</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parent_</span><span class="p">)),</span>
+        <span class="n">children</span><span class="p">:</span> <span class="nd">vec!</span><span class="p">(),</span>
+        <span class="n">container_type</span><span class="p">:</span> <span class="nn">ContainerType</span><span class="p">::</span><span class="n">Container</span><span class="p">,</span>
+        <span class="n">layout</span><span class="p">:</span> <span class="nf">Some</span><span class="p">(</span><span class="n">layout</span><span class="p">),</span>
+    <span class="p">}));</span>
+    <span class="k">if</span> <span class="n">parent</span><span class="nf">.get_type</span><span class="p">()</span> <span class="o">==</span> <span class="nn">ContainerType</span><span class="p">::</span><span class="n">Workspace</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="k">mut</span> <span class="n">workspace</span> <span class="o">=</span> <span class="n">parent</span><span class="p">;</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nf">Some</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span> <span class="o">=</span> <span class="n">workspace</span><span class="nf">.get_layout</span><span class="p">()</span> <span class="p">{</span>
+            <span class="n">container</span><span class="nf">.borrow_mut</span><span class="p">()</span><span class="nf">.set_layout</span><span class="p">(</span><span class="n">layout</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">workspace</span><span class="nf">.add_child</span><span class="p">(</span><span class="n">container</span><span class="nf">.clone</span><span class="p">());</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c">// Need to add the "parent" as the child of the container we just made.</span>
+        <span class="k">drop</span><span class="p">(</span><span class="n">parent</span><span class="p">);</span>
+        <span class="k">let</span> <span class="n">child_</span> <span class="o">=</span> <span class="n">parent_</span><span class="nf">.clone</span><span class="p">();</span>
+        <span class="k">let</span> <span class="n">child</span> <span class="o">=</span> <span class="n">child_</span><span class="nf">.borrow</span><span class="p">();</span>
+        <span class="k">let</span> <span class="n">parent_of_child</span> <span class="o">=</span> <span class="n">child</span><span class="nf">.get_parent</span><span class="p">()</span><span class="nf">.expect</span><span class="p">(</span><span class="s">"child had no parent"</span><span class="p">);</span>
+        <span class="k">let</span> <span class="n">child_clone</span> <span class="o">=</span> <span class="nn">Rc</span><span class="p">::</span><span class="nf">make_mut</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span> <span class="n">child_</span><span class="nf">.clone</span><span class="p">())</span><span class="nf">.clone</span><span class="p">()</span><span class="nf">.into_inner</span><span class="p">();</span>
+        <span class="c">// Need to remove the child from their parent</span>
+        <span class="n">parent_of_child</span><span class="nf">.borrow_mut</span><span class="p">()</span><span class="nf">.remove_child</span><span class="p">(</span><span class="o">&amp;</span><span class="n">child_clone</span><span class="nf">.clone</span><span class="p">());</span>
+        <span class="c">// Add the container we just made as a child, replacing the one we removed</span>
+        <span class="n">parent_of_child</span><span class="nf">.borrow_mut</span><span class="p">()</span><span class="nf">.add_child</span><span class="p">(</span><span class="n">container</span><span class="nf">.clone</span><span class="p">());</span>
+        <span class="c">// The new container is now a child of the old child's parent</span>
+        <span class="n">container</span><span class="nf">.borrow_mut</span><span class="p">()</span><span class="nf">.add_child</span><span class="p">(</span><span class="n">child_</span><span class="nf">.clone</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="n">container</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This tree, though memory safe, is very tedious to use and could fall apart at any time if we forget to drop a <code class="highlighter-rouge">RefCell</code> before trying to borrow it again. It also wouldn’t be easy to extend to work with the other tiling methods that we want to support. What we need is a way to mutate part of the tree without the need for <code class="highlighter-rouge">RefCell</code>.</p>
+
+<h2 id="gaining-flexibility-with-custom-unsafe-abstractions">Gaining flexibility with custom unsafe abstractions</h2>
+<p>Because Rust is a systems programming language it gives us the tools to make our own safe abstractions. Raw pointers (<code class="highlighter-rouge">*const</code> and <code class="highlighter-rouge">*mut</code>) are like references but they do not check the special borrow checker rules at compile time. It’s up to the programmer to ensure that these rules are enforced in his code. The rules themselves are very simple, but can be tricky to get right.</p>
+
+<p>Here’s our tree, converted to using unsafe raw pointers:</p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">pub</span> <span class="k">struct</span> <span class="n">Node</span> <span class="p">{</span>
+    <span class="n">parent</span><span class="p">:</span> <span class="o">*</span><span class="k">mut</span> <span class="n">Node</span><span class="p">,</span>
+    <span class="n">children</span><span class="p">:</span> <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is much better looking, though now we need to ensure that we are following those rules manually.</p>
+
+<p>Since our parent <code class="highlighter-rouge">Node</code> is now behind a <code class="highlighter-rouge">*mut</code>, Rust will no longer ensure that the value it points to is still valid.. This is bad but fixable. Since <code class="highlighter-rouge">Node</code>s own their children (they are moved into the <code class="highlighter-rouge">Vec</code> and are no longer behind an <code class="highlighter-rouge">Rc</code>) whenever we delete a <code class="highlighter-rouge">Node</code> all of its children are immediately dropped as well. To ensure that there is absolutely no way a child can point to a removed parent, we’ll override <code class="highlighter-rouge">Drop</code> for <code class="highlighter-rouge">Node</code>:</p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">impl</span> <span class="n">Drop</span> <span class="k">for</span> <span class="n">Node</span> <span class="p">{</span>
+    <span class="k">fn</span> <span class="k">drop</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span> <span class="k">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="n">children</span><span class="p">:</span> <span class="o">&amp;</span><span class="k">mut</span> <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&amp;</span><span class="k">mut</span> <span class="k">self</span><span class="py">.children</span><span class="p">;</span>
+        <span class="k">for</span> <span class="k">mut</span> <span class="n">child</span> <span class="n">in</span> <span class="n">children</span> <span class="p">{</span>
+            <span class="n">child</span><span class="py">.parent</span> <span class="o">=</span> <span class="nn">ptr</span><span class="p">::</span><span class="nf">null_mut</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now, thanks to RAII, there is no way for a child to have a dangling reference to a parent that was removed. Excellent! We solved the memory unsafety right?</p>
+
+<h2 id="guaranteeing-memory-safety-is-hard">Guaranteeing memory safety is hard</h2>
+<p>Unfortunately, no. This unsafe abstraction is very leaky, and prone to bugs even with totally “safe” code. A <code class="highlighter-rouge">Node</code> borrowed as mutable is no longer checked by the borrow checker, which means we can no longe ensure the following rules are upheld:</p>
+<ul>
+  <li>One or more immutable references <code class="highlighter-rouge">&amp;T</code>) to a resource and no mutable references.</li>
+  <li>Exactly one mutable reference (<code class="highlighter-rouge">&amp;mut T</code>) and no immutable references.</li>
+</ul>
+
+<p>Because of the raw pointer we can’t guarantee that a <code class="highlighter-rouge">*mut</code> pointer is uniquely referencing our parent <code class="highlighter-rouge">Node</code>, so our own definiton of <code class="highlighter-rouge">as_mut</code> to mirror <code class="highlighter-rouge">RefCell</code>’s requires the unsafe keyword:</p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/// Attempts to get the Node as a mutable reference by going through it's parent</span>
+<span class="c">///</span>
+<span class="c">/// # Unsafety</span>
+<span class="c">/// The borrow checker can not properly infer that you are taking a mutable reference</span>
+<span class="c">/// to this Node, so it is possible to invalidate any other references to this</span>
+<span class="c">/// Node when you use this method.</span>
+<span class="k">pub</span> <span class="k">unsafe</span> <span class="k">fn</span> <span class="n">as_mut</span><span class="o">&lt;</span><span class="nv">'a</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">'a</span> <span class="k">self</span><span class="p">)</span> <span class="k">-&gt;</span> <span class="o">&amp;</span><span class="nv">'a</span> <span class="k">mut</span> <span class="n">Node</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="n">maybe_parent</span> <span class="o">=</span> <span class="k">self</span><span class="nf">.get_parent</span><span class="p">();</span>
+    <span class="k">if</span> <span class="n">maybe_parent</span><span class="nf">.is_some</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="n">parent</span><span class="p">:</span> <span class="o">&amp;</span><span class="nv">'a</span> <span class="k">mut</span> <span class="n">Node</span> <span class="o">=</span> <span class="k">self</span><span class="nf">.get_parent</span><span class="p">()</span><span class="nf">.unwrap</span><span class="p">();</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="n">in</span> <span class="n">parent</span><span class="nf">.get_children_mut</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="o">*</span><span class="n">child</span> <span class="o">==</span> <span class="o">*</span><span class="k">self</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">child</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+    <span class="nd">panic!</span><span class="p">(</span><span class="s">"Parent had no node!"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It is up to the caller to ensure that there are no other references to this <code class="highlighter-rouge">Node</code> or any of this <code class="highlighter-rouge">Node</code> children. If there are, then those references might find themselves refering to inconsistent data or even a dangling pointer!<sup><a href="#as_mut_gist" name="as_mut_gist_back">3</a></sup></p>
+
+<p>However, even without using that function Rust will no longer stop us from shooting ourselves in the foot. Can you spot the memory unsafety bug in the following function?</p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/// Remove a node from its parent.</span>
+<span class="c">/// This method will mutate the parent if it exists.</span>
+<span class="k">pub</span> <span class="k">fn</span> <span class="nf">remove_from_parent</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span> <span class="k">self</span><span class="p">)</span> <span class="k">-&gt;</span> <span class="nb">Option</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="k">mut</span> <span class="n">maybe_node</span><span class="p">:</span> <span class="nb">Option</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="o">=</span> <span class="nb">None</span><span class="p">;</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nf">Some</span><span class="p">(</span><span class="k">mut</span> <span class="n">parent</span><span class="p">)</span> <span class="o">=</span> <span class="k">self</span><span class="nf">.get_parent</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nf">Some</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">=</span> <span class="n">parent</span><span class="py">.children</span><span class="nf">.iter</span><span class="p">()</span><span class="nf">.position</span><span class="p">(|</span><span class="n">c</span><span class="p">|</span> <span class="n">c</span> <span class="o">==</span> <span class="k">self</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">maybe_node</span> <span class="o">=</span> <span class="nf">Some</span><span class="p">(</span><span class="n">parent</span><span class="py">.children</span><span class="nf">.remove</span><span class="p">(</span><span class="n">index</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">self</span><span class="py">.parent</span> <span class="o">=</span> <span class="nn">ptr</span><span class="p">::</span><span class="nf">null_mut</span><span class="p">();</span>
+    <span class="n">maybe_node</span>
+<span class="p">}</span>
+<span class="err">```</span><span class="n">rust</span>
+
+<span class="n">The</span> <span class="n">bug</span> <span class="n">is</span> <span class="n">on</span> <span class="n">the</span> <span class="n">line</span> <span class="k">where</span> <span class="n">we</span> <span class="n">set</span> <span class="err">`</span><span class="n">maybe_node</span><span class="err">`</span> <span class="n">to</span> <span class="err">`</span><span class="nf">Some</span><span class="p">(</span><span class="n">parent</span><span class="py">.children</span><span class="nf">.remove</span><span class="p">(</span><span class="n">index</span><span class="p">))</span><span class="err">`</span><span class="py">. The</span> <span class="err">`</span><span class="n">Node</span><span class="err">`</span> <span class="n">we</span> <span class="n">are</span> <span class="n">moving</span> <span class="n">into</span> <span class="err">`</span><span class="n">maybe_node</span><span class="err">`</span> <span class="n">is</span> <span class="n">the</span> <span class="n">same</span> <span class="err">`</span><span class="n">Node</span><span class="err">`</span> <span class="n">pointed</span> <span class="n">to</span> <span class="n">by</span> <span class="err">`</span><span class="k">self</span><span class="err">`</span> <span class="n">so</span> <span class="n">after</span> <span class="n">the</span> <span class="n">removal</span> <span class="err">`</span><span class="k">self</span><span class="err">`</span> <span class="n">will</span> <span class="n">be</span> <span class="n">a</span> <span class="n">dangling</span> <span class="n">pointer</span><span class="py">. In</span> <span class="n">practice</span><span class="p">,</span> <span class="n">this</span> <span class="n">means</span> <span class="n">that</span> <span class="n">when</span> <span class="n">we</span> <span class="n">set</span> <span class="n">the</span> <span class="n">parent</span> <span class="n">to</span> <span class="n">be</span> <span class="err">`</span><span class="nn">ptr</span><span class="p">::</span><span class="nf">null_mut</span><span class="p">()</span><span class="err">`</span> <span class="n">after</span> <span class="n">the</span> <span class="n">removal</span> <span class="n">we</span> <span class="n">are</span> <span class="n">actually</span> <span class="n">setting</span> <span class="n">the</span> <span class="n">sibling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">original</span> <span class="err">`</span><span class="n">Node</span><span class="err">`</span><span class="nv">'s</span> <span class="n">parent</span> <span class="n">since</span> <span class="n">when</span> <span class="n">we</span> <span class="n">remove</span> <span class="n">the</span> <span class="err">`</span><span class="n">Node</span><span class="err">`</span> <span class="n">the</span> <span class="n">vector</span> <span class="n">moves</span> <span class="n">all</span> <span class="n">of</span> <span class="n">the</span> <span class="n">elements</span> <span class="n">over</span> <span class="n">to</span> <span class="n">the</span> <span class="n">left</span><span class="err">.</span><span class="o">&lt;</span><span class="n">sup</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"#vector-unsafety-gist"</span> <span class="n">name</span><span class="o">=</span><span class="s">"vector-unsafety-gist-back"</span><span class="o">&gt;</span><span class="mi">4</span><span class="o">&lt;</span><span class="err">/</span><span class="n">a</span><span class="o">&gt;&lt;</span><span class="err">/</span><span class="n">sup</span><span class="o">&gt;</span>
+
+
+<span class="n">What</span> <span class="n">about</span> <span class="n">the</span> <span class="n">next</span> <span class="n">function</span><span class="o">?</span> <span class="n">This</span> <span class="n">one</span> <span class="n">is</span> <span class="n">more</span> <span class="n">tricky</span> <span class="n">to</span> <span class="n">spot</span> <span class="n">and</span> <span class="n">is</span> <span class="n">actually</span> <span class="n">a</span> <span class="n">bug</span> <span class="n">with</span> <span class="n">our</span> <span class="err">`</span><span class="nb">Vec</span><span class="err">`.</span>
+
+<span class="err">```</span><span class="n">rust</span>
+<span class="k">struct</span> <span class="n">Node</span> <span class="p">{</span>
+    <span class="n">parent</span><span class="p">:</span> <span class="o">*</span><span class="k">mut</span> <span class="n">Node</span><span class="p">,</span>
+    <span class="n">children</span><span class="p">:</span> <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span>
+<span class="p">}</span>
+
+<span class="k">impl</span> <span class="n">Node</span> <span class="p">{</span>
+    <span class="k">fn</span> <span class="nf">add_child</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span> <span class="k">self</span><span class="p">,</span> <span class="k">mut</span> <span class="n">child</span><span class="p">:</span> <span class="n">Node</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">child</span><span class="py">.parent</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span>
+        <span class="k">self</span><span class="py">.children</span><span class="nf">.push</span><span class="p">(</span><span class="n">child</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>When a <code class="highlighter-rouge">Vec</code>’s capacity is reached it is automatically reallocated to have double the capacity.<sup><a name="vec-src-back" href="#vec-src">5</a></sup>. When that happens, any references/pointers to the data in the original vector become dangling since every <code>Node</code> in the vector was moved to the new one. To fix this, you’d either have to change your data structure to something that doesn’t reallocate when the capacity is reached (such as a linked list) or you have to constantly re-validate the sibling’s parent pointers whenever you add a child to a <code class="highlighter-rouge">Node</code>.<sup><a href="#vector-resize-gist" name="vector-resize-gist-back">6</a></sup></p>
+
+<h2 id="petgraph-to-the-rescue">Petgraph to the rescue!</h2>
+<p>Right now, there is no crate that provides a tree with all the features that we need for Way Cooler. Hopefully there will be one in the future, maybe one provided by us. Currently, Way Cooler uses <a href="https://crates.io/crates/petgraph">petgraph</a> for a tree. We have an adapter module that maps graph operations to tree operations. In a way, it’s just like using an adjacency list, and what a “proper” tree would probably look like in Rust. <code class="highlighter-rouge">Node</code> removals are still something that needs to be carefully managed, but there is no longer the possibility of a segfault in the tiling code for Way Cooler.</p>
+
+<p>Though Rust is still a very new systems language, its benefits are already showing. Despite the immaturity of Rust’s ecosystem, the existing tools are very versatile and well documented enough to work as good as, and perhaps even better than, an equivalent library in C. The library ecosystem is still very young and it’s a shame that there is no reliable standard tree data structure on crates.io yet, but that should hopefully change in the coming years as Rust gains in popularity.</p>
+
+<hr />
+<p><sup><a href="#weak-parent-back">1</a></sup><a name="weak-parent"></a> Note that we can not have both the parents and the children be reference counted, otherwise that would create a cycle and consequentially a memory leak.</p>
+<p><sup><a href="#smart-pointer-tree-code-back">2</a></sup><a name="smart-pointer-tree-code"></a> Here's a link to the <a href="https://github.com/Immington-Industries/way-cooler/blob/7e22199bd57e9286a74c98e2b829a0ace72ecadd/src/layout/containers.rs">full code</a>, if you'd like to see just how nasty it can get.</p>
+<p><sup><a href="#as_mut_gist_back" name="as_mut_gist">3</a></sup>Play around with the <code>as_mut</code> bug <a href="https://is.gd/06U1FT">here</a></p>
+<p><sup><a href="#vector-unsafety-gist-back">4</a></sup><a name="vector-unsafety-gist"></a> Play around with the inconsistent <code>self</code> bug <a href="https://is.gd/RKdp5B">here</a></p>
+<p><sup><a href="#vec-src-back">5</a></sup><a name="vec-src"></a><a href="https://doc.rust-lang.org/src/alloc/up/src/liballoc/raw_vec.rs.html#212"> Rust source for Vec</a></p>
+<p><sup><a href="#vector-resize-gist-back">6</a></sup><a name="vector-resize-gist"></a> Play around with the vector invalidation bug <a href="https://is.gd/OlbcFu">here</a></p>
+
+                </div>
+                <div class="article-share">
+                  
+                  
+                  <a href="https://twitter.com/home?status=Designing+a+mutable+bi-directional+tree+safely+in+Rust%20-%20https://timidger.github.io/posts/designing-a-bi-mutable-directional-tree-safely-in-rust%20by%20@timidger" title="Share on Twitter" rel="noreferrer noopener" target="_blank">
+                    <svg viewBox="0 0 512 512"><path d="M492 109.5c-17.4 7.7-36 12.9-55.6 15.3 20-12 35.4-31 42.6-53.6 -18.7 11.1-39.4 19.2-61.5 23.5C399.8 75.8 374.6 64 346.8 64c-53.5 0-96.8 43.4-96.8 96.9 0 7.6 0.8 15 2.5 22.1 -80.5-4-151.9-42.6-199.6-101.3 -8.3 14.3-13.1 31-13.1 48.7 0 33.6 17.2 63.3 43.2 80.7C67 210.7 52 206.3 39 199c0 0.4 0 0.8 0 1.2 0 47 33.4 86.1 77.7 95 -8.1 2.2-16.7 3.4-25.5 3.4 -6.2 0-12.3-0.6-18.2-1.8 12.3 38.5 48.1 66.5 90.5 67.3 -33.1 26-74.9 41.5-120.3 41.5 -7.8 0-15.5-0.5-23.1-1.4C62.8 432 113.7 448 168.3 448 346.6 448 444 300.3 444 172.2c0-4.2-0.1-8.4-0.3-12.5C462.6 146 479 129 492 109.5z"/></svg>
+                  </a>
+                  <a href="https://www.facebook.com/sharer/sharer.php?u=https://timidger.github.io/posts/designing-a-bi-mutable-directional-tree-safely-in-rust" title="Share on Facebook" rel="noreferrer noopener" target="_blank">
+                    <svg viewBox="0 0 512 512"><path d="M288 192v-38.1c0-17.2 3.8-25.9 30.5-25.9H352V64h-55.9c-68.5 0-91.1 31.4-91.1 85.3V192h-45v64h45v192h83V256h56.4l7.6-64H288z"/></svg>
+                  </a>
+                  <a href="https://plus.google.com/share?url=https://timidger.github.io/posts/designing-a-bi-mutable-directional-tree-safely-in-rust" title="Share on Google+" rel="noreferrer noopener" target="_blank">
+                    <svg viewBox="0 0 128 128"><path d="M40.7 55.9v16.1c0 0 15.6 0 22 0C59.2 82.5 53.8 88.2 40.7 88.2c-13.3 0-23.7-10.8-23.7-24.2s10.4-24.2 23.7-24.2c7.1 0 11.6 2.5 15.8 5.9 3.3-3.3 3.1-3.8 11.6-11.9 -7.2-6.6-16.8-10.6-27.4-10.6C18.2 23.3 0 41.5 0 64c0 22.5 18.2 40.7 40.7 40.7 33.6 0 41.8-29.3 39-48.8H40.7zM113.9 56.7V42.6h-10.1v14.1H89.4v10.1h14.5v14.5h10.1V66.8H128V56.7H113.9z"/></svg>
+                  </a>
+                </div>
+
+                
+              </article>
+            </div>
+            <div class="grid-cell links-cell side-bar upper-links-cell">
+              <div style="overflow: hidden">
+    <h1>Posts</h1>
+    <ul class="side-links">
+        
+        <li><a href="/posts/designing-a-bi-mutable-directional-tree-safely-in-rust" title="Designing a mutable bi-directional tree safely in Rust">Designing a mutable bi-directional tree safely in Rust</a></li>
+        
+    </ul>
+</div>
+
+            </div>
+          </div>
+        <footer class="footer scrollappear">
+</footer>
+
+      </div>
+    </div>
+  </main>
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113741520-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-113741520-1');
+  </script>
+
+
+<script type="text/javascript" src="/assets/vendor-2e5becc015a837c852edabccbc32f5a390d4afa7a2ca601db948ea5b9e50292a.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/assets/scrollappear-e2da8ea567e418637e31266cc5302126eaa79f62a2273739086358b589a89ee6.js"></script>
+
+
+<script type="text/javascript" src="/assets/application-cd43a7f9bd8a08997bb19229cd040e7129ede0a1adf77c693b5835c9f8c2a4b1.js"></script>
+
+</body>
+</html>

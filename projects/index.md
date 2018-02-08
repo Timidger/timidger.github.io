@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: project-listing
 title: "My Projects"
 description: "List of my projects"
 permalink: /projects/

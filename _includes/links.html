@@ -1,5 +1,8 @@
-<div style="overflow: hidden">
-    <h1>Posts</h1>
+<div class="link-listing" style="overflow: hidden">
+    <h1><a href="/about.html">About me</a></h1>
+    <h1><a href="/resume.pdf">My resume</a></h1>
+    <h1><a href="/project/index.html" >My projects</a></h1>
+    <h1>Posts:</h1>
     <ul class="side-links">
         {% for post in site.posts %}
         <li><a href="{{post.url | relative_url}}" title="{{post.title}}">{{post.title}}</a></li>

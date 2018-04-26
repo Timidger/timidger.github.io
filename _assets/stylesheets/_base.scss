@@ -31,6 +31,7 @@ body {
 p {
   margin: 0;
   font-weight: $base-font-weight;
+  font-size: 1.1rem;
 }
 
 b,
@@ -50,25 +51,27 @@ h6 {
 }
 
 h1 {
-  font-size: $base-font-size * 1.6;
+  font-size: 3rem;
   font-weight: 400;
   letter-spacing: -.03em;
   color: $article-header-title-color;
 }
 
 h2 {
-  font-size: $base-font-size * 1.5;
+  font-size: 2rem;
   font-weight: 400;
 }
 
 h3 {
-  font-size: $base-font-size * 1.3;
+  font-size: 1rem;
   font-weight: 500;
 }
 
 h4 {
-  font-size: $base-font-size * 1.1;
-  font-weight: 500;
+  font-size: $base-font-size * 1.6;
+  letter-spacing: -.03em;
+  color: $article-header-title-color;
+  font-weight: 400;
 }
 
 h5 {
@@ -210,7 +213,7 @@ img {
 }
 
 .link-listing {
-    h1 {
+    h4 {
         padding-top: 2vh;
     }
 }
@@ -222,4 +225,13 @@ img {
     p {
         padding: 10px 0;
     }
+}
+
+code {
+    padding: 2px 4px;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+    font-size: 0.9rem !important;
+    color: #383e41 !important;
+    background-color: #f3f6fa !important;
+    border-radius: 0.3rem !important;
 }

@@ -1,8 +1,8 @@
 <div class="link-listing" style="overflow: hidden">
-    <h1><a href="/about.html">About me</a></h1>
-    <h1><a href="/resume.pdf">My resume</a></h1>
-    <h1><a href="/projects" >My projects</a></h1>
-    <h1>Posts:</h1>
+    <h4><a href="/about.html">About me</a></h4>
+    <h4><a href="/resume.pdf">My resume</a></h4>
+    <h4><a href="/projects" >My projects</a></h4>
+    <h4>Posts:</h4>
     <ul class="side-links">
         {% for post in site.posts %}
         <li><a href="{{post.url | relative_url}}" title="{{post.title}}">{{post.title}}</a></li>

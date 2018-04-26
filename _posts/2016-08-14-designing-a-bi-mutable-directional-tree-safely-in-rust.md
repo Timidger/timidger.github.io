@@ -3,6 +3,7 @@ layout: post
 title: Designing a mutable bi-directional tree safely in Rust
 date: 2016-08-14
 categories: blog
+visible: 1
 ---
 
 While designing [Way Cooler](https://github.com/Immington-Industries/way-cooler), it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the [different](http://dwm.suckless.org/) [tiling](https://awesome.naquadah.org/) [window](http://i3wm.org/) [managers](http://xmonad.org/) for X, it becomes apparent that there is no one-size-fits-all method. One of the primary goals of Way Cooler is to be as customizable as possible, so we want the user to choose the method that works best for them.

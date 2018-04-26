@@ -5,7 +5,9 @@
     <h4>Posts:</h4>
     <ul class="side-links">
         {% for post in site.posts %}
-        <li><a href="{{post.url | relative_url}}" title="{{post.title}}">{{post.title}}</a></li>
+        {% if post.visible == 1 %}
+            <li><a href="{{post.url | relative_url}}" title="{{post.title}}">{{post.title}}</a></li>
+        {% endif %}
         {% endfor %}
     </ul>
 </div>

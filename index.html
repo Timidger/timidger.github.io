@@ -6,6 +6,7 @@ description: "Preston Carpenter's blog"
 
 <ul class="article-list">
   {% for post in paginator.posts %}
+  {% if post.visible == 1 %}
     <li class="article-list-item {% if site.scrollappear_enabled %}scrollappear{% endif %}">
       <a href="{{ post.url | relative_url }}" title="{{ post.title }}">
         <h5>
@@ -41,6 +42,7 @@ description: "Preston Carpenter's blog"
         </div>
       </div>
     </li>
+  {% endif %}
   {% endfor %}
   {% if paginator.total_pages > 1 %}
     <li class="article-pagination {% if site.settings.scrollappear_enabled %}scrollappear{% endif %}">

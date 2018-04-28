@@ -1,8 +1,9 @@
 ---
 layout: post
 title: Big Programming
+date: 2018-04-28
 categories: blog
-visible: 0
+visible: 1
 ---
 
 Recently I was talking with a student I was TAing and he asked me some questions that, while not about the PL theory course he was taking, were questions that I had heard before. They were questions I had asked myself, and I'm sure many others had as well.
@@ -132,7 +133,6 @@ Eventually, a project will stop being useful for you to work on. Maybe it will j
 * [Codeless Code](http://thecodelesscode.com/contents)
 * [Worse is Better](https://www.dreamsongs.com/WorseIsBetter.html)
 * [The Architecture of Open Source Applications](http://aosabook.org/en/index.html)
-* [Ian's Shoelace Site](https://www.fieggen.com/shoelace/)
 
 
 ---

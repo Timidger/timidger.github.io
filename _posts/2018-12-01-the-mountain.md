@@ -56,6 +56,6 @@ Many people quit playing Getting Over It With Bennett Foddy before reaching the 
 
 I'm not sure if I'll apply to Google again next year. The work was certainly interesting, but they have tricky, difficult problems to solve that code alone cannot solve. While I was there 3 separate [[1](https://twitter.com/kateconger/status/1030243849267015681?lang=en), [2](https://www.breitbart.com/tech/2018/09/12/leaked-video-google-leaderships-dismayed-reaction-to-trump-election/), [3](https://www.nytimes.com/2018/10/25/technology/google-sexual-harassment-andy-rubin.html?action=click&module=Top%20Stories&pgtype=Homepage)], high profile leaks occurred. The last one culminated in the first company wide walkout against sexual harassment. I was there when [a Googler championed into a microphone "Fuck you leakers" to thunderous applause](https://www.businessinsider.com.au/jack-poulson-ex-google-says-management-obsessed-with-stopping-leaks-2018-12). It's not the shining utopia my younger self dreamed of.
 
-Besides, even if I don't apply again I don't really see my rejection as a failure. I achieved my childhood dream and worked there for 12 exciting, frustrating (in a good way!) weeks. I'm very lucky to have experienced that.
+Besides, even if I don't apply again my rejection does not mean I failed to climb my mountain. I achieved my childhood dream and worked there for 12 exciting, frustrating (in a good way!) weeks. I'm very lucky to have experienced that.
 
 It's time to find a new mountain to climb.

@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Preston Carpenter's Blog | Preston Carpenter</title>
-  <meta name="description" content="All about Preston Carpenter">
+  <title>Preston Carpenter's Blog | RiiR considered harmful</title>
+  <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta property="og:title" content="Preston Carpenter">
+  <meta property="og:title" content="RiiR considered harmful">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://timidger.github.io/about">
-  <meta property="og:description" content="All about Preston Carpenter">
+  <meta property="og:url" content="https://timidger.github.io/posts/rust-c-bindings">
+  <meta property="og:description" content="">
   <meta property="og:site_name" content="Preston Carpenter's Blog">
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:url" content="https://timidger.github.io/about">
-  <meta name="twitter:title" content="Preston Carpenter">
-  <meta name="twitter:description" content="All about Preston Carpenter">
+  <meta name="twitter:url" content="https://timidger.github.io/posts/rust-c-bindings">
+  <meta name="twitter:title" content="RiiR considered harmful">
+  <meta name="twitter:description" content="">
 
   <script src="/highlight.pack.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
@@ -136,41 +136,83 @@
   </div>
 </nav>
 
-          <div class="main-content" >
+          <div class="main-content">
             <div class="grid-cell grid-centered main-content">
-                <div class="about scrollappear">
-  <img src="/assets/about-320f734dc884fca2d8368814463f1ec289845c516c0cd19e0fba5c8cfb00e0c5.jpg" alt="About Preston Carpenter header image" />
-  <h1>About me</h1>
-  <p>
-      I am a Computer Science (BS) graduate of <a href="https://northeastern.edu">Northeastern University</a>.
+              <article class="article scrollappear">
+                <header class="article-header">
+                  <h1>RiiR considered harmful</h1>
+                  <p></p>
+                  <div class="article-list-footer">
+                    <span class="article-list-date">
+                      April 10, 2019
+                    </span>
+                    <span class="article-list-divider">-</span>
+                    <span class="article-list-minutes">
+                      
+                      
+                        2 minute read
+                      
+                    </span>
+                    <span class="article-list-divider">-</span>
+                    <div class="article-list-tags">
+                      
+                    </div>
+                  </div>
+                </header>
 
-      I'm currently writing firmware at <a href="https://starry.com">Starry</a>. I've also
-      previously worked at Google, Microsoft, Intuit, and 
-      <a href="https://www.kinto.care/">Kinto Care</a>.
+                <div class="article-content">
+                  <p>This paper was originally written for a class while I was attending University.</p>
 
-  </p>
-  <br/>
+<p>It was written about the Rust programming language and talked about an issue
+that I have not seen gain traction anywhere else. It posits that rewriting
+libraries that are originally written in C to Rust (RiiR) is a bad engineering
+decision and that instead programmers should strive to write bindings to the C
+library.</p>
 
-  <p>
-      <a href="https://github.com/Timidger/resume/raw/master/resume.pdf">Here is my curriculum vitae.</a>
-  </p>
+<p>I recognize that this is a difficult undertaking due to how Rust is designed to
+be memory safe. I give examples of well done C binding libraries, such as rlua,
+and talk about my experiences with wlroots-rs, which are bindings to the wlroots
+library that I wrote my self.</p>
 
-  <br/>
+<p>Since I wrote this piece I have had a slight change of heart. C bindings are the
+right thing to do, but they are so horribly boring and difficult they are not
+worth doing. If you are writing a program and you think Rust is a good fit, it’s
+only a good fit if the libraries you want to use are wrapped or implemented in
+Rust. If bindings or a RiiR library does not exist, then you are better off just
+using C. Maintaining bindings for any non-trivial C library is a full time job
+and usually tangential to the goal you actually want to achieve.</p>
 
-  <p>
-      <a href="/projects/">Here is a list of projects I maintain.</a>
-  </p>
+<p>Personally speaking, I don’t think that something is objectively better just
+because it’s written in Rust. That’s not a feature to me, just an implementation
+detail, and undue effort should not be done just so that Rust can be used if it
+is not going to make the program better.</p>
 
-  <br/>
+<p>I will be making a bigger blog post about this later as this will affect my
+design of Way Cooler and have ramifications for wlroots-rs.</p>
 
-  <p>
-      I can best be reached via email <a href="mailto:APragmaticPlace@gmail.com"> here</a>.
-  </p>
-</div>
+<p><a href="../riir-considered-harmful.pdf">RiiR Considered Harmful: Just Bind to C
+Libraries</a></p>
 
+                </div>
+                <div class="article-share">
+                  
+                  
+                  <a href="https://twitter.com/home?status=RiiR+considered+harmful%20-%20https://timidger.github.io/posts/rust-c-bindings%20by%20@timidger" title="Share on Twitter" rel="noreferrer noopener" target="_blank">
+                    <svg viewBox="0 0 512 512"><path d="M492 109.5c-17.4 7.7-36 12.9-55.6 15.3 20-12 35.4-31 42.6-53.6 -18.7 11.1-39.4 19.2-61.5 23.5C399.8 75.8 374.6 64 346.8 64c-53.5 0-96.8 43.4-96.8 96.9 0 7.6 0.8 15 2.5 22.1 -80.5-4-151.9-42.6-199.6-101.3 -8.3 14.3-13.1 31-13.1 48.7 0 33.6 17.2 63.3 43.2 80.7C67 210.7 52 206.3 39 199c0 0.4 0 0.8 0 1.2 0 47 33.4 86.1 77.7 95 -8.1 2.2-16.7 3.4-25.5 3.4 -6.2 0-12.3-0.6-18.2-1.8 12.3 38.5 48.1 66.5 90.5 67.3 -33.1 26-74.9 41.5-120.3 41.5 -7.8 0-15.5-0.5-23.1-1.4C62.8 432 113.7 448 168.3 448 346.6 448 444 300.3 444 172.2c0-4.2-0.1-8.4-0.3-12.5C462.6 146 479 129 492 109.5z"/></svg>
+                  </a>
+                  <a href="https://www.facebook.com/sharer/sharer.php?u=https://timidger.github.io/posts/rust-c-bindings" title="Share on Facebook" rel="noreferrer noopener" target="_blank">
+                    <svg viewBox="0 0 512 512"><path d="M288 192v-38.1c0-17.2 3.8-25.9 30.5-25.9H352V64h-55.9c-68.5 0-91.1 31.4-91.1 85.3V192h-45v64h45v192h83V256h56.4l7.6-64H288z"/></svg>
+                  </a>
+                  <a href="https://plus.google.com/share?url=https://timidger.github.io/posts/rust-c-bindings" title="Share on Google+" rel="noreferrer noopener" target="_blank">
+                    <svg viewBox="0 0 128 128"><path d="M40.7 55.9v16.1c0 0 15.6 0 22 0C59.2 82.5 53.8 88.2 40.7 88.2c-13.3 0-23.7-10.8-23.7-24.2s10.4-24.2 23.7-24.2c7.1 0 11.6 2.5 15.8 5.9 3.3-3.3 3.1-3.8 11.6-11.9 -7.2-6.6-16.8-10.6-27.4-10.6C18.2 23.3 0 41.5 0 64c0 22.5 18.2 40.7 40.7 40.7 33.6 0 41.8-29.3 39-48.8H40.7zM113.9 56.7V42.6h-10.1v14.1H89.4v10.1h14.5v14.5h10.1V66.8H128V56.7H113.9z"/></svg>
+                  </a>
+                </div>
+
+                
+              </article>
             </div>
             <div class="grid-cell links-cell side-bar upper-links-cell">
-                <div class="link-listing" style="overflow: hidden">
+              <div class="link-listing" style="overflow: hidden">
     <h4><a class="side-link-special" href="/about.html">About me</a></h4>
     <h4><a class="side-link-special" href="https://github.com/Timidger/resume/raw/master/resume.pdf" >My resume</a></h4>
     <h4><a class="side-link-special" href="/projects" >My projects</a></h4>

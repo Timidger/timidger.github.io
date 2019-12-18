@@ -1,38 +1,29 @@
----
-permalink: /404.html
-sitemap: false
----
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>{{ site.name }} | Page not found</title>
+  <title>Preston Carpenter's Blog | Page not found</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {% if site.local_fonts %}
-    {% asset fonts.css %}
-  {% endif %}
+  
+    <link rel="stylesheet" type="text/css" href="/assets/fonts-85dab368d056b5d66418fbfd7e55a89f34f644ee811c8218c81017204426121b.css">
+  
 
-  {% if site.blog_theme == "light" %}
-    {% asset notfound-light.css %}
-  {% else %}
-    {% asset notfound-dark.css %}
-  {% endif %}
+  
+    <link rel="stylesheet" type="text/css" href="/assets/notfound-light-e80442cb21ce963b6d4343ffde66961d01e535022928a3e2e185896dbd828371.css">
+  
 </head>
 <body>
   <main class="notfound-wrapper">
     <div class="notfound-content">
-      <h1><a href="{{ '/' | relative_url }}" title="Back to homepage">404</a></h1>
+      <h1><a href="/" title="Back to homepage">404</a></h1>
       <p>
-        Looks like you got lost. Let's get you back to the <a href="{{ '/' | relative_url }}">homepage</a>!
+        Looks like you got lost. Let's get you back to the <a href="/">homepage</a>!
       </p>
     </div>
   </main>
 
-  {% unless site.local_fonts %}
-    {% asset webfonts.js %}
-  {% endunless %}
+  
 </body>
 </html>

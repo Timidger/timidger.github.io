@@ -8,9 +8,10 @@ visible: 1
 
 Disclaimer: unlike most content I write, this is not going to be technical.
 
-Recently I completed a life long dream of mine to work at Google. This had been an implicit goal since I was about 8 and an explicit goal since 16 when I started programming. Since 19 I designed my life around trying to get a "good" job with the implicit assumption that Google was the standard for "good". Even as their ethics have been called into question most people still revere them as a company that employs only the top 1% of engineers. 
+> This is a blog post I wrote in March of 2019. March of 2020 I rediscovered 
+> it and cleaned it up before posting it for the first time.
 
-So away I climbed.
+Recently I completed a life long dream of mine to work at Google. This had been an implicit goal since I was about 8 and an explicit goal since 16 when I started programming. Since 19 I designed my life around trying to get a "good" job with the implicit assumption that Google was the standard for "good". Even as their ethics have been called into question most people still revere them as a company that employs only the top 1% of engineers. They are a mountain -- massive, cold, and above all indifferent to those foolish enough to attempt to reach the summit.
 
 ## Climbing the Mountain
 
@@ -28,7 +29,7 @@ In order to seem more hireable I also contributed informal documentation to a ma
 
 In tandem with all of the above I was also studying for interviews. Unlike Microsoft and Intuit, which had given me offers at the end of the internship after they were impressed with my performance, you must complete two additional interviews in order to be considered for full time at Google. These would be at the same caliber as those that are interviewing for full time, and it would be weighed alongside your internship performance when the committee was considering you. The internship was weighed slightly heavier, but both were important.
 
-I read Programming Pearls (which I strongly suggest as light reading) and Cracking the Coding Interview (which I strongly _don't_ suggest as lightly reading), scheduled two separate mock interviews with full time employees in order to practice, and had mock interviews every week with my fellow interns.
+I read Programming Pearls (which makes for some fun light reading) and Cracking the Coding Interview (second only to counting the number of spots on the sun for how painful it is to yours retinas), scheduled two separate mock interviews with full time employees in order to practice, and had mock interviews every week with my fellow interns.
 
 I interviewed about two weeks before my internship ended after which I finished up my project. My manager was happy with the project according to our exit interview and reassured me in all of our weekly "check up" meetings that we were having up until that point that my work was appreciated. When I left my colleagues were looking forward to me returning, one of them even correcting me from "if I return" to "when I return".
 
@@ -37,25 +38,19 @@ A month and a half after the internship ended I was informed the hiring committe
 ## Falling Down the Mountain
 Recently I've been playing [Getting Over It With Bennett Foddy](http://www.foddy.net/2017/09/getting-over-it/). You might remember it from about a year ago when it was a craze among streamers. Because of this it attracted a certain reputation as being irrelevant trash which is unfortunate. It _is_ trash (Bennett Foddy himself said so in the game itself), but it's also a thought provoking game because it explores the theme of frustration.
 
-[Watch this video to see what I'm talking about](https://www.youtube.com/watch?v=DCcA4FyWeXI&t=3s)
+When I play Getting Over It With Bennett Foddy I re-live that final phone call from my Google recruiter every time I inevitably fall down the mountain.
 
-When I play Getting Over It With Bennett Foddy and inevitably fall down the mountain the feeling I get is the same feeling I got during that final phone call from my Google recruiter.
+The feeling is always the same, no matter how careful and deliberate I am or how hard I try to curb my expectations. Frustration of a unique sort that is hard to find anywhere else. I tense up, as if expecting a punch. Coldness sweeps over me, as sweat pools in undesirable places. My stomach drops and seems to fall out of me, away from me, as if in disgust.
 
-When you climb the mountain you know it's possible you will fall just like when you interview with Google you can fall into the [Interview Anti-Loop](http://steve-yegge.blogspot.com/2008/03/get-that-job-at-google.html). Each careful movement of the hammer as you navigate up the mountain is a direct parallel to each calculated step you took along the way: getting good enough to pass through company's filters in order to interview, studying how to beat those interviews in your spare time, working on side projects in your spare time for free in order to seem more desirable to companies.
+Each careful movement of the hammer as I navigate up the mountain is a direct parallel to each calculated step I took: working on side projects in my spare time so that FAANG wanna-be companies will hire me, studying contrived interview questions to pass interviews, actually working as a software engineer at the not-quite-Googles so there's a fallback plan in case of failure.
 
-The experience you feel when you fall down the mountain is always the same, no matter how careful and deliberate you were or how hard you try to curb your expectations. Frustration of a unique sort that is hard to find anywhere else. You tense up, as if expecting a punch. Coldness sweeps over you, as sweat pools in undesirable places. Your stomach drops and seems to fall out of you, away from you, as if in disgust.
+After falling down the mountain a little disparaging clip plays as the second wave of frustration washes over me. This one is a steamy cocktail of shame, regret, and hopelessness. It is paralyzing, urging me to quit before I suffer through that embarrassing defeat again. The pithy quotes, so much verbal fodder as the pitying comments offered to me by friends and loved ones, only fans the flames of rage I direct at myself.
+
+However, I have been conditioned. Years of self-flagellation have made it impossible for me to back down once my pride has been bruised. I beat my head mercilessly against the wall, knowing it will break before I do.
+
 
 ## Getting Over It
-After you fall down the mountain you treated to a little disparaging clip as the second wave of frustration washes over you. This one is a steamy cocktail of shame, regret, and hopelessness. It is paralyzing, urging you to quit before you suffer through that embarrassing defeat again.
 
 ## // TODO
 ## // climbing back up the mountain => working again
 ## // getting better at certain parts => getting better at programing, resume building, networking, interviewing
-
-Many people quit playing Getting Over It With Bennett Foddy before reaching the summit of the mountain. Most stopped because they decided that it's a trash game unworthy of their time. Some went away unhappy with the time they wasted on attempting an unachievable goal. A few put it down but told themselves they'll get back to it once they have more experience and are better equipped to deal with the hardships the mountain throws at you. A select few eventually picked it back up, again and again, after falling, again and again, until the summit was finally reached and the mountain defeated.
-
-I'm not sure if I'll apply to Google again next year. The work was certainly interesting, but they have tricky, difficult problems to solve that code alone cannot solve. While I was there 3 separate [[1](https://twitter.com/kateconger/status/1030243849267015681?lang=en), [2](https://www.breitbart.com/tech/2018/09/12/leaked-video-google-leaderships-dismayed-reaction-to-trump-election/), [3](https://www.nytimes.com/2018/10/25/technology/google-sexual-harassment-andy-rubin.html?action=click&module=Top%20Stories&pgtype=Homepage)], high profile leaks occurred. The last one culminated in the first company wide walkout against sexual harassment. I was there when [a Googler championed into a microphone "Fuck you leakers" to thunderous applause](https://www.businessinsider.com.au/jack-poulson-ex-google-says-management-obsessed-with-stopping-leaks-2018-12). It's not the shining utopia my younger self dreamed of.
-
-Besides, even if I don't apply again my rejection does not mean I failed to climb my mountain. I achieved my childhood dream and worked there for 12 exciting, frustrating (in a good way!) weeks. I'm very lucky to have experienced that.
-
-It's time to find a new mountain to climb.

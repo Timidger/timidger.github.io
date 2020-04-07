@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Big Programming - A Pragmatic Place</title><link rel="icon" type="image/png" href=favicon-light.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Big Programming" />
+<meta property="og:description" content="Recently I was talking with a student I was TAing and he asked me some questions that, while not about the PL theory course he was taking, were questions that I had heard before. They were questions I had asked myself, and I&rsquo;m sure many others had as well.
+These questions were varied and targeted many things, but they can be boiled down into one question: &ldquo;How do I make a big program?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://timidger.github.io/posts/2018-04-28-programming-big/" />
+<meta property="article:published_time" content="2018-04-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-04-28T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Big Programming"/>
+<meta name="twitter:description" content="Recently I was talking with a student I was TAing and he asked me some questions that, while not about the PL theory course he was taking, were questions that I had heard before. They were questions I had asked myself, and I&rsquo;m sure many others had as well.
+These questions were varied and targeted many things, but they can be boiled down into one question: &ldquo;How do I make a big program?"/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/main.css" />
+
+	<script src="https://timidger.github.io/js/feather.min.js"></script>
+	
+	<script src="https://timidger.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="https://timidger.github.io/">A Pragmatic Place</a></h1>
+	<div class="site-description"><h2>Preston Carpenter&rsquo;s technical blog</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/timidger" title="Github"><i data-feather="github"></i></a><a href="mailto:APragmaticPlace@gmail.com" title="email"><i data-feather=""></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/about">About the author</a>
+			</li>
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All Posts</a>
+			</li>
+			
+			<li>
+				<a href="/way-cooler">Archived posts</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Big Programming</h1>
+			<div class="meta">Posted at &mdash; Apr 28, 2018</div>
+		</div>
+
+		<div class="markdown">
+			<p>Recently I was talking with a student I was TAing and he asked me some questions that, while not about the PL theory course he was taking, were questions that I had heard before. They were questions I had asked myself, and I&rsquo;m sure many others had as well.</p>
+<p>These questions were varied and targeted many things, but they can be boiled down into one question: &ldquo;How do I make a big program?&quot;.</p>
+<p>&ldquo;Big&rdquo; here is a little ambiguous. Big as in literally big? Big as in popular? Big as in complex? Sure maybe, but none of that is necessarily the <em>goal</em> here. <!-- raw HTML omitted --><!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted --> &ldquo;Big&rdquo; here is a bad word, because the word he actually meant was &ldquo;useful&rdquo;. He wants to make some useful software and it just so happens that all of the useful software out there is big.<!-- raw HTML omitted --><!-- raw HTML omitted -->2<!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p>So how do you make <del>&quot;big&quot;</del> useful software?</p>
+<h1 id="making-big-useful-software">Making <del>&quot;Big&quot;</del> Useful Software</h1>
+<p>You make useful software by trying (and failing) to make big software. Repeatedly. Along the way you fail less and less and your big software eventually becomes useful software. You&rsquo;ll always fail eventually, bitrot affects all but the simplest of programs. But it will get easier.</p>
+<p>For your first useful software you should take things slow though. Chances are, the thing your are making will not become the next Facebook or Linux. Instead, you should try to focus on what engineering skills you want to learn from this endeavor, rather than the software itself. You need to set goals, things you want to learn.</p>
+<h2 id="mao-or-how-a-chinese-dictator-helped-me-learn-oop">Mao (or, How a Chinese Dictator Helped Me Learn OOP)</h2>
+<p>As an example, when I was started out the first difficult thing I had to learn that a textbook couldn&rsquo;t properly teach me was <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>. To accomplish this goal, I decided to try to implement a little game called <a href="https://en.wikipedia.org/wiki/Mao_(card_game)">Mao</a>.</p>
+<p><strong>Deciding to implement Mao was profoundly important</strong>. Not because it went anywhere. You can see the fruit of my labors <a href="https://github.com/Timidger/Mao">here</a>, to my great shame. I probably re-wrote it 4 or 5 times and it still has a lot of bugs in it. It&rsquo;s not really usable, but that&rsquo;s not really the point. I had a lot of fun working on it because I really liked the problem. I really wanted Mao to be computerized because that seemed cool to me. It&rsquo;s very important that you choose something <em>fun</em>.<!-- raw HTML omitted --><!-- raw HTML omitted -->3<!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p>I reached my goal because it was fun. In fact I exceeded my goal, probably because I was having so much fun. Not only did I learn about OOP, I learned about <a href="https://docs.python.org/3/library/socket.html">basic networking</a>, <a href="https://docs.python.org/3/library/threading.html">multi-threading</a>, and <a href="https://docs.python.org/3/library/tk.html">GUI programming</a>.</p>
+<p>So pick something like that, some part of programming you&rsquo;re not very confident about or haven&rsquo;t ever touched. Then, find something fun you want to implement.</p>
+<h2 id="examples-of-big-software">Examples of Big Software</h2>
+<p>Oddly enough, this seems to be a big sticking point with a lot of programmers. If you can&rsquo;t think of anything fun, <a href="/assets/challenge-list-1.jpg">here</a> are <a href="/assets/challenge-list-2.png">some</a> lists <a href="/assets/challenge-list-3.png">courtesy</a> of <a href="https://4chan.org/g">/g/</a>. Not all of those are great, but they should get you thinking.</p>
+<p>My recommendation is to make a file manager. Though that might just be because all the ones I&rsquo;ve been using are kind of crap, it&rsquo;s actually got quite a bit going on:</p>
+<ul>
+<li>Graphical Programming</li>
+<li>Lots of optional features you can tack on</li>
+<li>Useful software you use everyday</li>
+</ul>
+<h1 id="how-to-start">How to Start</h1>
+<p>Okay, assuming you chose a nice project from the previous section, how do you start? Well first you have to choose your tools.</p>
+<h2 id="language">Language</h2>
+<p>Choose the one you know best. It doesn&rsquo;t matter if it&rsquo;s dynamically/statically weakly/strongly typed. Any language will do, even ones designed in a week by a homophobe.</p>
+<h2 id="editor">Editor</h2>
+<p>Choose one you know best. If you don&rsquo;t know one very well, I suggest something easy like Atom, Sublime, or Visual Studio Code.</p>
+<p>Eventually you should look into using Vim or Emacs. If you are up for a challenge you can look into those now but don&rsquo;t continue using them if it interferes with the project.</p>
+<h2 id="version-control">Version Control</h2>
+<p>If you have never used distributed version control before (e.g Git or Mercurial) then I highly suggest you try out using git. Not only will it help you track your progress, you&rsquo;ll learn about a great tool you can use later.</p>
+<p>If it seems like too much and it&rsquo;s going to put off you starting your project put it off until later. But definitely come back to this because this is a very important tool to learn.</p>
+<h2 id="libraries--frameworks">Libraries / Frameworks</h2>
+<p>Though this is somewhat project dependent (and my personal opinion), I highly suggest you don&rsquo;t use a large, complicated library/framework unless it&rsquo;s pivotal to what you need to do (and even then, consider something small).<!-- raw HTML omitted --><!-- raw HTML omitted -->4<!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p>As an example, in Mao I didn&rsquo;t use anything that wasn&rsquo;t in the standard library of Python. Now it has a large standard library, but easily the most complicated thing I used was the GUI toolkit. Everything else was just a wrapper around some system call.</p>
+<p>If you are making a GUI, by all means use GTK or QT or whatever. If you are making a website, consider using a small framework so you are actually learning the process of making that type of application rather than a framework (e.g Use flask, don&rsquo;t use django. Use vanilla JS, don&rsquo;t use React or Angular, etc.)</p>
+<p>You can learn a lot by re-inventing the wheel. Now is the time to do it.</p>
+<h2 id="operating-system">Operating System</h2>
+<p>Whatever you&rsquo;re most comfortable with. Windows, OSX, Linux, whatever.</p>
+<p>Seriously, I love Linux, but everyone loves dumping that on new programmers and it&rsquo;s really annoying.</p>
+<p><strong>You should absolutely learn how to use Linux</strong>.</p>
+<p><em>Just not right now</em>.</p>
+<p>Right now you&rsquo;re learning to make Big Software, and that doesn&rsquo;t necessitate learning Linux.</p>
+<h1 id="writing-the-code">Writing the Code</h1>
+<p>I assume you know how to write code, so I won&rsquo;t bother linking tutorials for that.</p>
+<h2 id="organizing-your-code">Organizing Your Code</h2>
+<p>But you may not know how to organize it. That&rsquo;s ok, but something you&rsquo;ll need to solve later. I suggest reading literature on this. Some good books for this are <a href="https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882">Clean Code</a>, and my personal favourite <a href="https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X">A Pragmatic Programmer</a>.</p>
+<p>This is also going to be dependent on your language. A Java project is going to be structured very differently compared to a C project.</p>
+<p>In the end though, don&rsquo;t worry about this at the start of the project. Start throwing things at the canvas, since you can always move things around later.</p>
+<h2 id="refactoring">Refactoring</h2>
+<p>For a big part of a big project is refactoring. If you write some code and then realize later that it&rsquo;s not designed well you should change it. This isn&rsquo;t always the case in <em>very</em> big projects, but for these pedagogical exercises it&rsquo;s the best time to do heavy refactoring.</p>
+<p>I rewrote Mao <em>4 times</em>. Each time I learned a lot more about how to structure my code. Don&rsquo;t be afraid to do a full rewrite.</p>
+<h2 id="make-things-configurable">Make Things Configurable</h2>
+<p>This depends on the application you&rsquo;re building, but making things configurable exposes you to a lot of new things. It means you have to choose a configuration file format, find a way to parse it, and generally make your code more flexible.</p>
+<p>For some basic formats, I suggest using INI or, if that is too simple, YAML.</p>
+<h2 id="documentation">Documentation</h2>
+<p>Writing documentation is a skill that is hard to learn. I still think it&rsquo;s something I&rsquo;m bad at. The only way to get better at is practice.</p>
+<p>Documentation doesn&rsquo;t just refer to doc comments. It also means writing READMEs, writing high level design documents, and writing git comments. For a good tutorial on how to read good git comments, see <a href="https://chris.beams.io/posts/git-commit/">this</a>.</p>
+<h2 id="make-it-easy-to-test">Make It Easy to Test</h2>
+<p>You should make it easy to test your code. I don&rsquo;t just mean easy to set up and run automated tests against it (though you should do that too).</p>
+<p>You should be able to, with a single command/click, run the program in order to test a new feature out. Anything more than that and it makes it harder to iterate on your programmer. This feedback loop is very important as it reduces friction and helps you concentrate on your work without breaking flow.</p>
+<h1 id="takeaways">Takeaways</h1>
+<h2 id="setting-sub-goals">Setting Sub Goals</h2>
+<p>One of the biggest things you can do to improve your chances of success is setting sub goals.</p>
+<p>If you are writing a file manager, a good first sub goal would be to list the files in a directory on the console. Then to be able to have a &ldquo;current&rdquo; directory that can interactively print out the current contents. Now you should be able to print out files and folders differently. Now you want to list information about the files and folders (what type are they? How big are they?).</p>
+<p>This console is starting to become limiting. Now maybe you&rsquo;ll want to look into a TUI or GUI library to display files and folders. Then you should add icons. Maybe a tree structure on the left would be helpful. A search bar would be pretty cool. Ooo, what if the user wants to set a theme? You gotta add that feature.</p>
+<p>If you start with these small goals not only does it make it easier to stay motivated (because you get the satisfaction when you reach that goal) and set up an easy TODO list for you tackle, but it also encourages you to think about and get excited for the features you will add to your program.</p>
+<h2 id="show-people">Show People</h2>
+<p>Show people your work. It can be your friends and family or it can be other programmers. By showing other people you can feel good about the thing you accomplished.</p>
+<p>Don&rsquo;t be afraid of criticism, as long as it&rsquo;s valid criticism. If it&rsquo;s objective and about the work, use it to improve it. If it&rsquo;s ad hominem and mean, ignore them.</p>
+<h2 id="knowing-when-to-stop">Knowing When to Stop</h2>
+<p>Eventually, a project will stop being useful for you to work on. Maybe it will just get boring, or maybe any more value you can extract from it isn&rsquo;t worth the effort. Don&rsquo;t be afraid to stop before it&rsquo;s &ldquo;complete&rdquo;. Remember what the ultimate goal here is: learning. If you &ldquo;fail&rdquo; but learn something, you didn&rsquo;t actually fail.</p>
+<h2 id="further-reading">Further Reading</h2>
+<ul>
+<li><a href="http://matt.might.net/articles/what-cs-majors-should-know/">What every computer science major should know (Matt Might)</a></li>
+<li><a href="http://sijinjoseph.com/programmer-competency-matrix/">Programmer Competency Matrix</a></li>
+<li><a href="http://thecodelesscode.com/contents">Codeless Code</a></li>
+<li><a href="https://www.dreamsongs.com/WorseIsBetter.html">Worse is Better</a></li>
+<li><a href="http://aosabook.org/en/index.html">The Architecture of Open Source Applications</a></li>
+</ul>
+<hr>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted --> What you actually want to make some <em>popular</em> software? It&rsquo;s fun to have people use your stuff. But if you&rsquo;ve never made big software before, lets hold off on that goal. Besides, perhaps that&rsquo;s not really a good goal to actually have when designing software.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->2<!-- raw HTML omitted --><!-- raw HTML omitted --> Yes, yes, yes. Small scripts can be useful. That&rsquo;s not what I&rsquo;m talking about either. They are only useful within the context of &ldquo;big&rdquo; programs too. I have a small script I have that controls the brightness of my screen. But it&rsquo;s no more useful than simply typing <code>echo $(($(cat /sys/class/backlight/intel_backlight/brightness) + 10)) &gt; /sys/class/backlight/intel_backlight/brightness</code> except for saving a few keystrokes. You know what <em>is</em> useful? Hooking that up to activate on a keyboard press using the window manager I wrote.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->3<!-- raw HTML omitted --><!-- raw HTML omitted --> But don&rsquo;t choose something <em>too fun</em>. A video game is very fun. If you want a good one check out <a href="http://stabyourself.net/nottetris2/">this one</a>. But games and things like that are very challenging and easy to get burnt out on. It&rsquo;s better to aim too low when you&rsquo;re starting out rather than shoot too high and burn yourself out.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->4<!-- raw HTML omitted --><!-- raw HTML omitted --> Large libraries and frameworks are really helpful, especially when working on a large team. However, libraries come and go and it&rsquo;s much important to learn fundamentals that stick around first like POSIX, language specs, and web standards.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+		</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> ©Copyright Preston Carpenter 2016, 2020 |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+</html>

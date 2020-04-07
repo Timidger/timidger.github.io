@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on A Pragmatic Place</title>
+    <link>https://timidger.github.io/posts/</link>
+    <description>Recent content in Posts on A Pragmatic Place</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©Copyright Preston Carpenter 2016, 2020</copyright>
+    <lastBuildDate>Wed, 10 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://timidger.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>RiiR considered harmful</title>
+      <link>https://timidger.github.io/posts/2019-04-10-rust-c-bindings/</link>
+      <pubDate>Wed, 10 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/posts/2019-04-10-rust-c-bindings/</guid>
+      <description>This paper was originally written for a class while I was attending University.
+It was written about the Rust programming language and talked about an issue that I have not seen gain traction anywhere else. It posits that rewriting libraries that are originally written in C to Rust (RiiR) is a bad engineering decision and that instead programmers should strive to write bindings to the C library.
+I recognize that this is a difficult undertaking due to how Rust is designed to be memory safe.</description>
+    </item>
+    
+    <item>
+      <title>The Cost of Moving Fast</title>
+      <link>https://timidger.github.io/posts/2018-05-11-the-cost-of-moving-fast/</link>
+      <pubDate>Fri, 11 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/posts/2018-05-11-the-cost-of-moving-fast/</guid>
+      <description>Rust recently released version 1.26 and with it a big change that has been in the pipeline quite a while: impl Trait syntax.
+I won&amp;rsquo;t go into the change itself (as it&amp;rsquo;s a little involved, especially if you don&amp;rsquo;t know Rust) and I won&amp;rsquo;t give my opinion of the change because I haven&amp;rsquo;t actually tried it yet so I don&amp;rsquo;t know if it&amp;rsquo;s a net win for the language yet.</description>
+    </item>
+    
+    <item>
+      <title>Big Programming</title>
+      <link>https://timidger.github.io/posts/2018-04-28-programming-big/</link>
+      <pubDate>Sat, 28 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/posts/2018-04-28-programming-big/</guid>
+      <description>Recently I was talking with a student I was TAing and he asked me some questions that, while not about the PL theory course he was taking, were questions that I had heard before. They were questions I had asked myself, and I&amp;rsquo;m sure many others had as well.
+These questions were varied and targeted many things, but they can be boiled down into one question: &amp;ldquo;How do I make a big program?</description>
+    </item>
+    
+    <item>
+      <title>Designing a mutable bi-directional tree safely in Rust</title>
+      <link>https://timidger.github.io/posts/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</link>
+      <pubDate>Sun, 14 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/posts/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</guid>
+      <description>While designing Way Cooler, it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the different tiling window managers for X, it becomes apparent that there is no one-size-fits-all method. One of the primary goals of Way Cooler is to be as customizable as possible, so we want the user to choose the method that works best for them.</description>
+    </item>
+    
+  </channel>
+</rss>

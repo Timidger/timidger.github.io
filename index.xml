@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>A Pragmatic Place</title>
+    <link>https://timidger.github.io/</link>
+    <description>Recent content on A Pragmatic Place</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©Copyright Preston Carpenter 2016, 2020</copyright>
+    <lastBuildDate>Thu, 09 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://timidger.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Way Cooler Post Mortem</title>
+      <link>https://timidger.github.io/way-cooler/2020-01-09-way-cooler-post-mortem/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2020-01-09-way-cooler-post-mortem/</guid>
+      <description>I started Way Cooler 4 years ago today. No real significant process has been made on the project for about 2 years now and my interest has waned considerably. I&amp;rsquo;m officially ending the project. As no one else has contributed seriously to it no successor is named. Anyone is free to fork it or use the name (as long as attribution for the original source is given, per the MIT license).</description>
+    </item>
+    
+    <item>
+      <title>Giving up on wlroots-rs</title>
+      <link>https://timidger.github.io/way-cooler/2019-04-29-rewriting-way-cooler-in-c/</link>
+      <pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2019-04-29-rewriting-way-cooler-in-c/</guid>
+      <description>Way Cooler is a Wayland compositor that was written in Rust using wlc. Since last April I&amp;rsquo;ve been rewriting it to use wlroots. In order to do that however I had to wrap the library so that it could be used in Rust. I worked on wlroots-rs and put Way Cooler on the back burner for a long time. After over 1,000 commits I&amp;rsquo;m giving up on it.
+Problems with wlroots-rs in detail Ownership with handles wlroots-rs was going to be the safe Rust wrapper for the very complicated wlroots library.</description>
+    </item>
+    
+    <item>
+      <title>RiiR considered harmful</title>
+      <link>https://timidger.github.io/posts/2019-04-10-rust-c-bindings/</link>
+      <pubDate>Wed, 10 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/posts/2019-04-10-rust-c-bindings/</guid>
+      <description>This paper was originally written for a class while I was attending University.
+It was written about the Rust programming language and talked about an issue that I have not seen gain traction anywhere else. It posits that rewriting libraries that are originally written in C to Rust (RiiR) is a bad engineering decision and that instead programmers should strive to write bindings to the C library.
+I recognize that this is a difficult undertaking due to how Rust is designed to be memory safe.</description>
+    </item>
+    
+    <item>
+      <title>Year of wlroots</title>
+      <link>https://timidger.github.io/way-cooler/2019-01-09-year-of-wlroots/</link>
+      <pubDate>Wed, 09 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2019-01-09-year-of-wlroots/</guid>
+      <description>Way Cooler Today is the third anniversary of Way Cooler&amp;rsquo;s initial commit. Three years is a long time, a significant milestone for any project especially one that has been basically a one-man-show for two years now.
+To be frank, I didn&amp;rsquo;t achieve my overly ambitious goal from last year. Way Cooler is no where near usable as a drop in AwesomeWM replacement. It was quite a long shot considering I am basically the only programmer working on it and I had school and two internships last year at major companies taking up valuable time.</description>
+    </item>
+    
+    <item>
+      <title>Pre-hibernate Update</title>
+      <link>https://timidger.github.io/way-cooler/2018-07-27-prehibernate-update/</link>
+      <pubDate>Fri, 27 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2018-07-27-prehibernate-update/</guid>
+      <description>What&amp;rsquo;s happening Way Cooler is going to be entering an official hibernation period for the next three months (as opposed to the unofficial hibernation period that it&amp;rsquo;s currently in).
+I will not be pushing any code for three months due to contractual obligations I have with Google. This limitation will be lifted on November 2nd, 2018.
+Patches will still be accepted during that time, there just won&amp;rsquo;t be any from me.</description>
+    </item>
+    
+    <item>
+      <title>The Cost of Moving Fast</title>
+      <link>https://timidger.github.io/posts/2018-05-11-the-cost-of-moving-fast/</link>
+      <pubDate>Fri, 11 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/posts/2018-05-11-the-cost-of-moving-fast/</guid>
+      <description>Rust recently released version 1.26 and with it a big change that has been in the pipeline quite a while: impl Trait syntax.
+I won&amp;rsquo;t go into the change itself (as it&amp;rsquo;s a little involved, especially if you don&amp;rsquo;t know Rust) and I won&amp;rsquo;t give my opinion of the change because I haven&amp;rsquo;t actually tried it yet so I don&amp;rsquo;t know if it&amp;rsquo;s a net win for the language yet.</description>
+    </item>
+    
+    <item>
+      <title>Big Programming</title>
+      <link>https://timidger.github.io/posts/2018-04-28-programming-big/</link>
+      <pubDate>Sat, 28 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/posts/2018-04-28-programming-big/</guid>
+      <description>Recently I was talking with a student I was TAing and he asked me some questions that, while not about the PL theory course he was taking, were questions that I had heard before. They were questions I had asked myself, and I&amp;rsquo;m sure many others had as well.
+These questions were varied and targeted many things, but they can be boiled down into one question: &amp;ldquo;How do I make a big program?</description>
+    </item>
+    
+    <item>
+      <title>April wlroots Hackathon Recap</title>
+      <link>https://timidger.github.io/way-cooler/2018-04-25-wlroots-hackathon-recap/</link>
+      <pubDate>Wed, 25 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2018-04-25-wlroots-hackathon-recap/</guid>
+      <description>Hi all! Sorry for the radio silence. I&amp;rsquo;ve been extremely busy with school but that should be finishing up very soon (I&amp;rsquo;m typing this up as I wait for my last exam to start in fact).
+As a recap of what&amp;rsquo;s happened over the past two months:
+ Attended the wlroots hackathon in Philadelphia with the Sway team, which was a lot of fun and very productive. Started moving Way Cooler over to wlroots (this is reflected in the master branch now).</description>
+    </item>
+    
+    <item>
+      <title>A (totally Awesome) update</title>
+      <link>https://timidger.github.io/way-cooler/2018-02-14-a-totally-awesome-update/</link>
+      <pubDate>Wed, 14 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2018-02-14-a-totally-awesome-update/</guid>
+      <description>Hey all! It&amp;rsquo;s been a bit quiet for a while, so I&amp;rsquo;d thought I&amp;rsquo;d give an update on both Way Cooler and wlroots-rs, the wrapper I&amp;rsquo;m building for the new compositor framework wlroots which I explained briefly in my Way Cooler: 2018 blog post.
+Way Cooler Development on Way Cooler has slowed considerably for me these past several months, mostly because I have focused on wlroots-rs. However, thanks to the wonderful work of psychon there has been non-trivial progress!</description>
+    </item>
+    
+    <item>
+      <title>Why Rust? A Two Year Retrospective</title>
+      <link>https://timidger.github.io/way-cooler/2018-01-09-way-cooler-turns-two/</link>
+      <pubDate>Tue, 09 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2018-01-09-way-cooler-turns-two/</guid>
+      <description>Why Rust? That was a question I asked exactly two years ago when I started Way Cooler (by the way, happy 2nd birthday Way Cooler!).
+When considering Rust for a Wayland window manager I had two basic requirements:
+ Is it possible? Is it better than C?  Is it possible to write a Wayland window manager in Rust? This first question was easy enough to answer. The Wayland ecosystem is almost entirely C, with the reference implementation server, client, and compositor written in C.</description>
+    </item>
+    
+    <item>
+      <title>Way Cooler in 2017 and beyond</title>
+      <link>https://timidger.github.io/way-cooler/2017-12-25-way-cooler-2017/</link>
+      <pubDate>Sun, 24 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2017-12-25-way-cooler-2017/</guid>
+      <description>2017 Recap 2017 was a big year for Way Cooler. Version 0.7.0 was just released and altogether we&amp;rsquo;ve had 3 major releases, with 6 minor releases spread out amongst them. Some of the big features from this year include:
+ Server-side borders Gaps X11-bar support Tabbed/Stacked tiling A separate lockscreen program A separate scrot-like program Multi-output support Redshift support Expansion of our D-Bus interfaces Expansion of our Lua library  Though that doesn&amp;rsquo;t cover all of what was accomplished, that list alone shows Way Cooler has accomplished a lot this year.</description>
+    </item>
+    
+    <item>
+      <title>Way Cooler Turns One!</title>
+      <link>https://timidger.github.io/way-cooler/2017-01-09-way-cooler-1-year-birthday/</link>
+      <pubDate>Mon, 09 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2017-01-09-way-cooler-1-year-birthday/</guid>
+      <description>Today marks one year of development on Way Cooler. The first commit was on January 6th, 2016, though true work on Way Cooler didn’t properly begin until several months after that. Most of those first months were spent wrapping wlc and learning about Rust.
+The project really came into fruition about a month before this, during the break between semesters. I wanted to work on a project, and a window manager seemed like a very do-able task.</description>
+    </item>
+    
+    <item>
+      <title>Way Cooler Alpha Update (2016 November)</title>
+      <link>https://timidger.github.io/way-cooler/2016-11-25-way-cooler-2016-november-update/</link>
+      <pubDate>Fri, 25 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2016-11-25-way-cooler-2016-november-update/</guid>
+      <description>Hey everyone! It&#39;s been a while since we&#39;ve posted an update about Way Cooler. There wasn&#39;t enough going on per week to do a &#34;this week in Way Cooler&#34; like so many other, more important projects are doing, but enough has finally changed to warrant an update.
+Changing tracks on the top bar First things first, after reviewing the reaction from the community about the bundled Electron bar, we have decided to scrap it in favor for a bar powered by Conrod and Lua.</description>
+    </item>
+    
+    <item>
+      <title>Designing a mutable bi-directional tree safely in Rust</title>
+      <link>https://timidger.github.io/posts/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</link>
+      <pubDate>Sun, 14 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/posts/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</guid>
+      <description>While designing Way Cooler, it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the different tiling window managers for X, it becomes apparent that there is no one-size-fits-all method. One of the primary goals of Way Cooler is to be as customizable as possible, so we want the user to choose the method that works best for them.</description>
+    </item>
+    
+    <item>
+      <title>Designing a mutable bi-directional tree safely in Rust</title>
+      <link>https://timidger.github.io/way-cooler/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</link>
+      <pubDate>Sun, 14 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</guid>
+      <description>While designing Way Cooler, it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the different tiling window managers for X, it becomes apparent that there is no one-size-fits-all method. One of the primary goals of Way Cooler is to be as customizable as possible, so we want the user to choose the method that works best for them.</description>
+    </item>
+    
+    <item>
+      <title>Preston Carpenter</title>
+      <link>https://timidger.github.io/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/about/</guid>
+      <description>About me Here is my curriculum vitae.
+Here is a list of projects I maintain.
+I can best be reached via email.
+I&amp;rsquo;m currently working at Starry on the Internet Firmware team.
+I&amp;rsquo;ve also previously worked for Google, Microsoft, Intuit, Kinto Care, and Beechwoods Software.
+I graduated with a Bachelor of Science from Northeastern University in May 2019.</description>
+    </item>
+    
+    <item>
+      <title>Projects</title>
+      <link>https://timidger.github.io/projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/projects/</guid>
+      <description>I don&amp;rsquo;t have any major projects going on at the moment, but here&amp;rsquo;s what I&amp;rsquo;ve worked on in the past:
+ Way Cooler: A Wayland clone of AwesomeWM for Wayland. todo: Personal task manager shaped to the way I deal with and think of tasks wlroots-rs: A 100% safe Rust wrapper for wlroots, a library to build Wayland compositors. rust-wlc: A Rust wrapper for wlc. It is suggested to use wlc.</description>
+    </item>
+    
+  </channel>
+</rss>

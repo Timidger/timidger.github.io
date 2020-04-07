@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>blog on A Pragmatic Place</title>
+    <link>https://timidger.github.io/categories/blog/</link>
+    <description>Recent content in blog on A Pragmatic Place</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©Copyright Preston Carpenter 2016, 2020</copyright>
+    <lastBuildDate>Thu, 09 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://timidger.github.io/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Way Cooler Post Mortem</title>
+      <link>https://timidger.github.io/way-cooler/2020-01-09-way-cooler-post-mortem/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2020-01-09-way-cooler-post-mortem/</guid>
+      <description>I started Way Cooler 4 years ago today. No real significant process has been made on the project for about 2 years now and my interest has waned considerably. I&amp;rsquo;m officially ending the project. As no one else has contributed seriously to it no successor is named. Anyone is free to fork it or use the name (as long as attribution for the original source is given, per the MIT license).</description>
+    </item>
+    
+    <item>
+      <title>Pre-hibernate Update</title>
+      <link>https://timidger.github.io/way-cooler/2018-07-27-prehibernate-update/</link>
+      <pubDate>Fri, 27 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2018-07-27-prehibernate-update/</guid>
+      <description>What&amp;rsquo;s happening Way Cooler is going to be entering an official hibernation period for the next three months (as opposed to the unofficial hibernation period that it&amp;rsquo;s currently in).
+I will not be pushing any code for three months due to contractual obligations I have with Google. This limitation will be lifted on November 2nd, 2018.
+Patches will still be accepted during that time, there just won&amp;rsquo;t be any from me.</description>
+    </item>
+    
+    <item>
+      <title>Way Cooler Turns One!</title>
+      <link>https://timidger.github.io/way-cooler/2017-01-09-way-cooler-1-year-birthday/</link>
+      <pubDate>Mon, 09 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2017-01-09-way-cooler-1-year-birthday/</guid>
+      <description>Today marks one year of development on Way Cooler. The first commit was on January 6th, 2016, though true work on Way Cooler didn’t properly begin until several months after that. Most of those first months were spent wrapping wlc and learning about Rust.
+The project really came into fruition about a month before this, during the break between semesters. I wanted to work on a project, and a window manager seemed like a very do-able task.</description>
+    </item>
+    
+    <item>
+      <title>Way Cooler Alpha Update (2016 November)</title>
+      <link>https://timidger.github.io/way-cooler/2016-11-25-way-cooler-2016-november-update/</link>
+      <pubDate>Fri, 25 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2016-11-25-way-cooler-2016-november-update/</guid>
+      <description>Hey everyone! It&#39;s been a while since we&#39;ve posted an update about Way Cooler. There wasn&#39;t enough going on per week to do a &#34;this week in Way Cooler&#34; like so many other, more important projects are doing, but enough has finally changed to warrant an update.
+Changing tracks on the top bar First things first, after reviewing the reaction from the community about the bundled Electron bar, we have decided to scrap it in favor for a bar powered by Conrod and Lua.</description>
+    </item>
+    
+    <item>
+      <title>Designing a mutable bi-directional tree safely in Rust</title>
+      <link>https://timidger.github.io/way-cooler/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</link>
+      <pubDate>Sun, 14 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/way-cooler/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</guid>
+      <description>While designing Way Cooler, it was decided early on that we wanted multiple different ways for the user to tile their windows. When you look around at all the different tiling window managers for X, it becomes apparent that there is no one-size-fits-all method. One of the primary goals of Way Cooler is to be as customizable as possible, so we want the user to choose the method that works best for them.</description>
+    </item>
+    
+  </channel>
+</rss>

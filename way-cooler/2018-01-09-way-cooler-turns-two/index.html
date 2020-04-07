@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Why Rust? A Two Year Retrospective - A Pragmatic Place</title><link rel="icon" type="image/png" href=favicon-light.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Why Rust? A Two Year Retrospective" />
+<meta property="og:description" content="Why Rust? That was a question I asked exactly two years ago when I started Way Cooler (by the way, happy 2nd birthday Way Cooler!).
+When considering Rust for a Wayland window manager I had two basic requirements:
+ Is it possible? Is it better than C?  Is it possible to write a Wayland window manager in Rust? This first question was easy enough to answer. The Wayland ecosystem is almost entirely C, with the reference implementation server, client, and compositor written in C." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://timidger.github.io/way-cooler/2018-01-09-way-cooler-turns-two/" />
+<meta property="article:published_time" content="2018-01-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-01-09T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Why Rust? A Two Year Retrospective"/>
+<meta name="twitter:description" content="Why Rust? That was a question I asked exactly two years ago when I started Way Cooler (by the way, happy 2nd birthday Way Cooler!).
+When considering Rust for a Wayland window manager I had two basic requirements:
+ Is it possible? Is it better than C?  Is it possible to write a Wayland window manager in Rust? This first question was easy enough to answer. The Wayland ecosystem is almost entirely C, with the reference implementation server, client, and compositor written in C."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/main.css" />
+
+	<script src="https://timidger.github.io/js/feather.min.js"></script>
+	
+	<script src="https://timidger.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="https://timidger.github.io/">A Pragmatic Place</a></h1>
+	<div class="site-description"><h2>Preston Carpenter&rsquo;s technical blog</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/timidger" title="Github"><i data-feather="github"></i></a><a href="mailto:APragmaticPlace@gmail.com" title="email"><i data-feather=""></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/about">About the author</a>
+			</li>
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All Posts</a>
+			</li>
+			
+			<li>
+				<a href="/way-cooler">Archived posts</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Why Rust? A Two Year Retrospective</h1>
+			<div class="meta">Posted at &mdash; Jan 9, 2018</div>
+		</div>
+
+		<div class="markdown">
+			<h1 id="why-rust">Why Rust?</h1>
+<p>That was a question I asked exactly two years ago when I started Way Cooler (by the way, happy 2nd birthday Way Cooler!).</p>
+<p>When considering Rust for a Wayland window manager I had two basic requirements:</p>
+<ul>
+<li>Is it possible?</li>
+<li>Is it better than C?</li>
+</ul>
+<h2 id="is-it-possible-to-write-a-wayland-window-manager-in-rust">Is it possible to write a Wayland window manager in Rust?</h2>
+<p>This first question was easy enough to answer. The Wayland ecosystem is almost entirely C, with the reference implementation server, client, and compositor written in C. All other non-toy compositors (Mutter, Kwin, Sway) are written in C for the simple reason that to use Wayland you need to know (and at some point write) C.</p>
+<p>So in order to write a Wayland compositor in something that&rsquo;s <em>not</em> C, you need to write some bindings that interact with Wayland. That requires a language that has good FFI support with C. Just about every language has some level of support, but the overhead and the complexity of using these bindings differs wildly between languages.</p>
+<p>Rust has excellent FFI compatibility with C, better than most other languages by far. The choice to keep the runtime small and not have a GC allows it to interoperate much better than other languages.<!-- raw HTML omitted --><a href="#go-footnote">1</a><!-- raw HTML omitted --> Due to these decisions, Rust is a solid enough choice to consider it as an alternative to C.</p>
+<p>But using Rust comes at an additional cost of complexity. Maintaining bindings, especially safe bindings, can be complicated. Using a less well known language like Rust means it&rsquo;s harder to solve problems because there&rsquo;s less developer buy-in, which means it&rsquo;s more difficult to find programmers that know enough Rust to contribute or enough information to solve the problems I&rsquo;ll need to solve.</p>
+<p>Rust requires a lot of nice benefits to offset these problems. Just because it was being billed as a &ldquo;systems programming language&rdquo; doesn&rsquo;t mean much if it can&rsquo;t offer me something C can&rsquo;t.</p>
+<h2 id="is-rust-a-better-language-than-c">Is Rust a better language than C?</h2>
+<p>Yes.<!-- raw HTML omitted --><a href="#but...">2</a><!-- raw HTML omitted --></p>
+<h2 id="is-rust-better-than-c-at-being-a-systems-programming-language">Is Rust better than C at being a systems programming language?</h2>
+<p>No.<!-- raw HTML omitted --><a href="#it-can-be">3</a><!-- raw HTML omitted --></p>
+<p>Normally when people answer this question, they usually point to the following features to justify why Rust is a better choice than C:</p>
+<ul>
+<li>ML-like type system</li>
+<li>Lifetimes</li>
+</ul>
+<p>Having a more strict type system that is designed around memory safety while also having the expressive type power from more &ldquo;academic&rdquo; languages gives Rust the ability to safely and securely abstract over unsafe system code. This feature can&rsquo;t be overstated in terms of the power it brings to the programmer to build safe abstractions compared to C++.</p>
+<p>However, those features are features of <em>safe</em> Rust. Safe Rust is a decidedly different language from Unsafe Rust. The main goal of unsafe Rust is to <strong>provide those features</strong> as a safe abstraction over unsafe implementations.</p>
+<p>While the majority (roughly 90% I&rsquo;d say) of Rust written is safe Rust, that last 10% is just as, if not more, important. The standard library is almost entirely unsafe Rust. Most large libraries in some way use either a C library (which requires good unsafe Rust to abstract it) or uses unsafe Rust for performance reasons.</p>
+<p>There are exceptions to this, of course. <a href="https://github.com/BurntSushi/ripgrep">ripgrep</a>, the fast alternative to grep, has exactly two lines of unsafe code. Many other projects have 0 lines of unsafe code in their core codebase. <a href="https://user-images.githubusercontent.com/1940490/33252553-b71b9ec0-d2f3-11e7-8abf-720cf00ac3ce.png">But 60% (including ripgrep) of crates on crates.io depend transitively on the libc crate</a>. This isn&rsquo;t a problem at all, it&rsquo;s good to depend on old, proven C libraries over new, unproven, and possibly bug-riddled implementations. But writing correct unsafe Rust code is hard. <a href="https://blog.rust-lang.org/2017/02/09/Rust-1.15.1.html">Very hard</a>. <a href="https://github.com/rust-lang/rust/issues/41622">Very, very hard</a>.</p>
+<p>Right now I&rsquo;m in the middle of wrapping a new framework for Wayland, <a href="https://github.com/swaywm/wlroots">wlroots</a>. <a href="https://github.com/swaywm/wlroots-rs">wlroots-rs</a> is going to be a 100% safe Rust wrapper around wlroots that allows compositors like Way Cooler to be written in safe Rust. In order to do that, wlroots-rs is going to have to be written in unsafe Rust. As of today, it is over 25% unsafe Rust code. If there is a bug in this code, this will have huge ramifications for Way Cooler. So I care a lot about my ability to write correct Unsafe Rust code</p>
+<h2 id="how-can-unsafe-rust-be-better">How can Unsafe Rust be better?</h2>
+<p>In the past, <a href="http://way-cooler.org/blog/2016/08/14/designing-a-bi-mutable-directional-tree-safely-in-rust.html">I&rsquo;ve made some huge mistakes when writing unsafe code</a>. When you start using the <code>unsafe</code> keyword, the Rust compiler almost immediately stops helping you. It doesn&rsquo;t try to do any inspection whatsoever and instead relies entirely on the programmer to do the correct thing. For programmers coming from C or especially C++ this environment should feel familiar. You&rsquo;re making a promise to the compiler, and it&rsquo;s entirely up to you to uphold it and then safely abstract over it.</p>
+<p>This is the point of Unsafe Rust. The whole point of <code>unsafe</code> is to tell the compiler &ldquo;get out of my way, you can&rsquo;t prove this correct&rdquo;. You <em>need</em> a mechanism like this in order to extend the capabilities of Safe Rust.</p>
+<p>Today, however, Unsafe Rust feels no better than writing in plain C. In fact, it can feel clumsy and like the language is almost fighting you. The compiler doesn&rsquo;t warn you when you try to do something potentially dumb. So how can we make it better to write Unsafe Rust?</p>
+<h3 id="unsafe-warnings">Unsafe Warnings</h3>
+<p>There are very basic checks that it should be performing that it&rsquo;s just not right now.</p>
+<p>Take, for example, this type signature (stolen from a bug that slipped into Rust 1.15):</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#00a">pub</span><span style="color:#bbb"> </span><span style="color:#00a">fn</span> <span style="color:#0a0">as_mut_slice</span>&lt;<span style="color:#1e90ff">&#39;a</span>&gt;(&amp;<span style="color:#1e90ff">&#39;a</span><span style="color:#bbb"> </span>self)<span style="color:#bbb"> </span>-&gt; <span style="color:#00a">&amp;</span><span style="color:#1e90ff">&#39;a</span><span style="color:#bbb"> </span><span style="color:#00a">mut</span><span style="color:#bbb"> </span>[T];<span style="color:#bbb">
+</span></code></pre></div><p>Just by looking at the type signature, this is <em>probably</em> incorrect. If you have just an immutable reference given to a function, you probably can&rsquo;t return a mutable reference with the same lifetime. The Rust compiler should look at this signature and issue a warning that this could be incorrect.</p>
+<p>This might seem like a contrived example, but this bug actually slipped through the cracks during a Rust release triage! Programmers are people too, we make mistakes. That&rsquo;s why we need to build tools into the compiler to warn us of these mistakes so we can fix them before they happen.</p>
+<p>I don&rsquo;t expect these checks to always be correct. Remember, the point of Unsafe Rust is to get the compiler out of your way. That&rsquo;s why there should be a way to suppress these warnings with an optional proof explaining why it&rsquo;s safe.</p>
+<p>E.g To demonstrate this, let us imagine a slightly different signature:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#00a">pub</span><span style="color:#bbb"> </span><span style="color:#00a">fn</span> <span style="color:#0a0">next_3_elements</span>&lt;<span style="color:#1e90ff">&#39;a</span>&gt;(&amp;<span style="color:#1e90ff">&#39;a</span><span style="color:#bbb"> </span>self)<span style="color:#bbb"> </span>-&gt; <span style="color:#0aa">Option</span>&lt;&amp;<span style="color:#1e90ff">&#39;a</span><span style="color:#bbb"> </span><span style="color:#00a">mut</span><span style="color:#bbb"> </span>[T]&gt;;<span style="color:#bbb">
+</span></code></pre></div><p>Based purely on the type signature again, this should throw up some sort of warning in the compiler. As you may have deduced by the <code>next_3_elements</code> name though, this structure might have an internal counter (e.g using <code>Cell</code> for internal mutability) that steps through and returns disjoint mutable slices three elements at a time.</p>
+<p>But the onerous is on the programmer to prove to the compiler that this is correct. So to stop such a warning you should be able to do:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#4c8317">#[allow(fishy_type_signature, reason = </span><span style="color:#a50">&#34;Slices returned are from a monotonically increasing counter that guarantees disjoint slices&#34;</span><span style="color:#4c8317">)]</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">pub</span><span style="color:#bbb"> </span><span style="color:#00a">fn</span> <span style="color:#0a0">next_3_elements</span>&lt;<span style="color:#1e90ff">&#39;a</span>&gt;(&amp;<span style="color:#1e90ff">&#39;a</span><span style="color:#bbb"> </span>self)<span style="color:#bbb"> </span>-&gt; <span style="color:#0aa">Option</span>&lt;&amp;<span style="color:#1e90ff">&#39;a</span><span style="color:#bbb"> </span><span style="color:#00a">mut</span><span style="color:#bbb"> </span>[T]&gt;;<span style="color:#bbb">
+</span></code></pre></div><p>To make this even better, you can make this reason automatically insert itself into the function documentation so that it&rsquo;s visible to consumers of the library why this is safe.</p>
+<p>I already do something similar to this <a href="https://github.com/swaywm/wlroots-rs/search?q=Rationale&amp;type=">using comments in wlroots-rs</a>.</p>
+<p>Now obviously all of those can&rsquo;t be caught with such a simple lint like the example above, but more should be done to catch these &ldquo;obvious&rdquo; mistakes so that it&rsquo;s easier to write unsafe code.</p>
+<h3 id="clearly-defined-rules-for-unsafe-code">Clearly defined rules for unsafe code</h3>
+<p><a href="https://doc.rust-lang.org/nomicon/">The Rustnomicon</a> is the unsafe version of the Rust book. It introduces and explains some of the problems that come up from writing unsafe Rust code. It&rsquo;s a very good primer, and I suggest anyone who has to write unsafe code check it out. But when the first few words of the book are:</p>
+<h2 id="note-this-is-a-draft-document-that-discusses-several-unstable-aspects-of-rust-and-may-contain-serious-errors-or-outdated-information">NOTE: This is a draft document that discusses several unstable aspects of Rust, and may contain serious errors or outdated information</h2>
+<p>it makes me question the stability of my Unsafe Rust code.</p>
+<p>There are rules today that highlight cases of undefined behavior (e.g mutable aliasing for references), which is good. However, there&rsquo;s also behavior <a href="https://www.reddit.com/r/rust/comments/4tz6e5/are_aliased_mutable_raw_pointers_ub/d5ljyfw/">that just hasn&rsquo;t been defined period</a>. Is having two raw, mutable pointers to the same piece of memory undefined? According to that thread, maybe! The rules haven&rsquo;t been defined yet.</p>
+<p>As bad as it is that C has so many cases of undefined behavior, it&rsquo;s so much worse to work in a language where you don&rsquo;t even know if doing something is undefined behavior or not.</p>
+<p>For 2018 I propose that there should be a team that should seek out defining, very clearly, at least some of these rules so that we understand what is and isn&rsquo;t permitted in Unsafe Rust code. Part of this effort should be partly standardizing the nomicon so that new users can learn Unsafe Rust just as easily as they can learn Safe Rust.</p>
+<h3 id="verification-process-for-unsafe-crates">Verification process for unsafe crates</h3>
+<p>Recently, I wrote a <a href="https://github.com/way-cooler/way-cooler-lock">lockscreen program for Way Cooler</a>. Part of a lockscreen&rsquo;s job is to handle passwords securely. The main way do that on Unix-likes is using something called <a href="https://en.wikipedia.org/wiki/Pluggable_authentication_module">PAM</a>. If you <a href="https://crates.io/search?q=pam">search &ldquo;pam&rdquo; on crates.io</a>, you get a lot of random crates that haven&rsquo;t been updated in a while or are poorly documented.</p>
+<p>If you choose the most popular one, <a href="https://github.com/1wilkens/pam-auth">pam-auth</a>, you&rsquo;ll find that (at least at the time I was using it, in early June) to be thoroughly unusable. Trying to use it as described would invoke a segfault. This was eventually fixed (I think by <a href="https://github.com/1wilkens/pam-auth/commit/cc9cb5a0b995b48fffe83c9780b4dcb7837fd4d0">this commit</a>), but by that point I resigned to <a href="https://github.com/way-cooler/way-cooler-lock/blob/d1fc5f54243f0aed8628eba3d48d941bdbc37d78/src/pam/wrapper.c">just using C</a>.</p>
+<p>The point is not to pick on the author of that crate. My library, <a href="https://github.com/way-cooler/rust-wlc">rust-wlc</a>, has much bigger issues that I will never fix (and instead were fixed by <a href="https://github.com/Drakulix/wlc.rs">wlc.rs</a>). Instead crates.io should offer a more explicit way of showing that a crate that utilizes a non-negligible amount of unsafe code to be somewhat correct.</p>
+<p>This probably can never be done in an automated fashion. There&rsquo;s no way to tell the difference between a &ldquo;negligible&rdquo; and &ldquo;non-negligible&rdquo; amount of Unsafe Rust code.</p>
+<p>One alternative that I&rsquo;ve yet to see discussed is to have crate owners offer their crate up for inspection by the wider community through some sort of standard process. There should be a suite of fuzzer test suites and a host of manual testing done on these crates to ensure that they are sound. Once they have been verified as such, they should be given a higher preference in the crates.io search and maybe even a special badge.</p>
+<p>The fight against unsafety is, of course, never ending. So for crates in this &ldquo;special club&rdquo; they should be locked from releasing new versions on crates.io until a sufficient consensus is made by experts in the community. Saying your crate is safe is never a one-and-done thing. By advertising the crate as safe, the author (and the community!) needs to take on the responsibility that the code has been properly vetted.</p>
+<h3 id="unsafe-ergonomics">Unsafe ergonomics</h3>
+<p>I admit this is relatively minor, but there&rsquo;s no reason why this has to be the case that I can tell.</p>
+<p>Writing unsafe Rust is <em>very</em> unergonomic. To a certain extent, this is deliberate. Writing unsafe code should be a last resort and by having awkward syntax it discourages the programmer from using it. However, the fact that I have to write this to access a field behind a raw pointer makes it much harder to both write <em>and</em> read code:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">(*(*some_struct).foo).another_thing<span style="color:#bbb">
+</span></code></pre></div><p>C, meanwhile, has very nice syntax for this:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">some_struct-&gt;foo-&gt;another_thing
+</code></pre></div><p>I <em>really</em> don&rsquo;t think we should use <code>.</code>, because a raw pointer is very different from a reference, and I understand that there&rsquo;s probably huge parsing issues with using <code>-&gt;</code> but there must be some sort of shorthand syntax to make this easier to write.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Still, there&rsquo;s a reason I used Rust for Way Cooler. Though the unsafe portions may not be enough of an improvement over C, the fact of the matter is that the majority of code in Way Cooler will be Safe Rust and Safe Rust is a wonderful language that is improving all the time. More than any other language, the Rust dev team are committed to making Rust as good as it can be. For the vast majority of users and use cases, Safe Rust is more than good enough as a replacement for a lot of code.</p>
+<p>However, the goal of Rust, for me at least, has always been as a replacement to C. To be a full replacement for C, effort must be made on bringing the Unsafe portion of Rust up to the ergonomic and rigorous standard that Safe Rust has.</p>
+<p>Not all of what I proposed can probably be implemented, but I implore the Rust dev team to not forget about the Unsafe portion of the language during this year&rsquo;s implementation period. Last year we saw some great strides in making Safe Rust more ergonomic and expressive. This year, I hope we see Rust become an even better alternative to C, in the safe <em>and</em> unsafe space.</p>
+<hr>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted --> For the record, Go, I hear, also has a good FFI story with C even though it does have a heavier runtime (along with a GC).</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->2<!-- raw HTML omitted --><!-- raw HTML omitted --> Like all language preferences, this is my opinion. So don&rsquo;t take this for absolute truth.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->3<!-- raw HTML omitted --><!-- raw HTML omitted --> But it absolutely has the potential to be a better systems programming language than C. <strong>This</strong> is why I chose Rust over C.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+		</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> ©Copyright Preston Carpenter 2016, 2020 |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+</html>

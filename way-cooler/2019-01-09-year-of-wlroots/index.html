@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Year of wlroots - A Pragmatic Place</title><link rel="icon" type="image/png" href=favicon-light.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Year of wlroots" />
+<meta property="og:description" content="Way Cooler Today is the third anniversary of Way Cooler&rsquo;s initial commit. Three years is a long time, a significant milestone for any project especially one that has been basically a one-man-show for two years now.
+To be frank, I didn&rsquo;t achieve my overly ambitious goal from last year. Way Cooler is no where near usable as a drop in AwesomeWM replacement. It was quite a long shot considering I am basically the only programmer working on it and I had school and two internships last year at major companies taking up valuable time." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://timidger.github.io/way-cooler/2019-01-09-year-of-wlroots/" />
+<meta property="article:published_time" content="2019-01-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-01-09T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Year of wlroots"/>
+<meta name="twitter:description" content="Way Cooler Today is the third anniversary of Way Cooler&rsquo;s initial commit. Three years is a long time, a significant milestone for any project especially one that has been basically a one-man-show for two years now.
+To be frank, I didn&rsquo;t achieve my overly ambitious goal from last year. Way Cooler is no where near usable as a drop in AwesomeWM replacement. It was quite a long shot considering I am basically the only programmer working on it and I had school and two internships last year at major companies taking up valuable time."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/main.css" />
+
+	<script src="https://timidger.github.io/js/feather.min.js"></script>
+	
+	<script src="https://timidger.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="https://timidger.github.io/">A Pragmatic Place</a></h1>
+	<div class="site-description"><h2>Preston Carpenter&rsquo;s technical blog</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/timidger" title="Github"><i data-feather="github"></i></a><a href="mailto:APragmaticPlace@gmail.com" title="email"><i data-feather=""></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/about">About the author</a>
+			</li>
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All Posts</a>
+			</li>
+			
+			<li>
+				<a href="/way-cooler">Archived posts</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Year of wlroots</h1>
+			<div class="meta">Posted at &mdash; Jan 9, 2019</div>
+		</div>
+
+		<div class="markdown">
+			<h1 id="way-cooler">Way Cooler</h1>
+<p>Today is the third anniversary of Way Cooler&rsquo;s initial commit. Three years is a
+long time, a significant milestone for any project especially one that has been
+basically a one-man-show for two years now.</p>
+<p>To be frank, I didn&rsquo;t achieve my overly ambitious goal <a href="/blog/2017/12/24/way-cooler-2017.html">from last
+year</a>. Way Cooler is no where near usable
+as a drop in AwesomeWM replacement. It was quite a long shot considering I am
+basically the only programmer working on it and I had school and two internships
+last year at major companies <a href="/blog/2018/07/27/prehibernate-update.html">taking up valuable
+time</a>. However, I should have planned
+better and in the future I&rsquo;m going to try not to make such broad proclamations.</p>
+<p>That being said&hellip;</p>
+<h1 id="2019-year-of-wlroots">2019: Year of wlroots</h1>
+<p>If you haven&rsquo;t heard, <a href="https://github.com/swaywm/wlroots">wlroots</a> is a hip new
+Wayland compositor framework that Way Cooler has been using for about a year
+now. It has made major strides in advancing Wayland. The library is entirely
+modular, unlike wlc and libweston, so you only use what you want to use. They
+have their <a href="https://github.com/swaywm/wlr-protocols">own host of protocols</a> that
+they are not only pushing for standardization but also are
+implementing in wlroots so compositors that are using wlroots can get that
+functionality for free if you opt-in. It implements the basics that every
+compositor will need to implement, e.g. rendering on DRM, getting seat
+information from libinput, and a solid xwayland implementation.</p>
+<p>So I&rsquo;m going to go ahead and declare 2019 the year of wlroots. Most of the work
+was done in 2018, but this year is when major compositors will begin to use it.
+Currently the only usable Wayland compositor that uses wlroots is sway, which is
+<a href="https://github.com/swaywm/sway/issues/1735">fast approaching a stable 1.0</a>.
+However there is a <a href="https://github.com/swaywm/wlroots/wiki/Projects-which-use-wlroots">long list of startup compositors (including Way
+Cooler)</a> that
+are using wlroots. At least some of them are expected to come into their own as
+alternatives to traditional X11 based systems this year, and it&rsquo;s all thanks to
+wlroots.</p>
+<h1 id="wlroots-rs">wlroots-rs</h1>
+<p>Thus far my main contribution to wlroots has been maintaining the
+<a href="https://github.com/swaywm/wlroots-rs">wlroots-rs</a> library. It has been very
+unstable and has had major periods of no updates. This is because I was
+splitting up my time between Way Cooler and wlroots-rs to the detriment of both.</p>
+<p>This year I&rsquo;m going to put all of my Wayland related efforts into two
+initiatives:</p>
+<ul>
+<li>Making wlroots-rs stable, ergonomic, and safe.</li>
+<li><a href="/book/index.html">Writing a book</a> to make it easy for <em>anyone</em> to make a
+Wayland compositor using Rust.</li>
+</ul>
+<h1 id="future-of-way-cooler">Future of Way Cooler</h1>
+<p>Way Cooler is going on the back burner. This was a tough decision to make, as I
+still use (a very ancient) version of Way Cooler every day and still mentor what
+few contributors I get. However I can&rsquo;t commit the time to work on this, my last
+semester of college, and the things I&rsquo;ve committed to above.</p>
+<p>I&rsquo;m not going to promise I&rsquo;ll ever come back to it. However, by finishing
+wlroots-rs and the book I want to make it viable for others to either continue
+my work or to make compositors themselves.</p>
+<p>I&rsquo;m still going to be maintaining <a href="https://github.com/way-cooler/way-cooler">the
+repo</a> - if anyone wants to send patches
+or be mentored on working on Way Cooler, feel free to reach out.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+		</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> ©Copyright Preston Carpenter 2016, 2020 |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+</html>

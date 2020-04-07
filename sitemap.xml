@@ -1,48 +1,117 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url>
-<loc>https://timidger.github.io/tag/design/</loc>
-<lastmod>2020-03-11T09:53:00-04:00</lastmod>
-</url>
-<url>
-<loc>https://timidger.github.io/tag/jekyll/</loc>
-<lastmod>2020-03-11T09:53:00-04:00</lastmod>
-</url>
-<url>
-<loc>https://timidger.github.io/tag/web/</loc>
-<lastmod>2020-03-11T09:53:00-04:00</lastmod>
-</url>
-<url>
-<loc>https://timidger.github.io/posts/designing-a-bi-mutable-directional-tree-safely-in-rust</loc>
-<lastmod>2016-08-14T00:00:00-04:00</lastmod>
-</url>
-<url>
-<loc>https://timidger.github.io/posts/programming-big</loc>
-<lastmod>2018-04-28T00:00:00-04:00</lastmod>
-</url>
-<url>
-<loc>https://timidger.github.io/posts/the-cost-of-moving-fast</loc>
-<lastmod>2018-05-11T00:00:00-04:00</lastmod>
-</url>
-<url>
-<loc>https://timidger.github.io/posts/rust-c-bindings</loc>
-<lastmod>2019-04-10T00:00:00-04:00</lastmod>
-</url>
-<url>
-<loc>https://timidger.github.io/about</loc>
-</url>
-<url>
-<loc>https://timidger.github.io/</loc>
-</url>
-<url>
-<loc>https://timidger.github.io/projects/</loc>
-</url>
-<url>
-<loc>https://timidger.github.io/resume.pdf</loc>
-<lastmod>2018-12-17T00:43:00-05:00</lastmod>
-</url>
-<url>
-<loc>https://timidger.github.io/riir-considered-harmful.pdf</loc>
-<lastmod>2019-12-18T09:18:05-05:00</lastmod>
-</url>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://timidger.github.io/</loc>
+    <lastmod>2020-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/categories/blog/</loc>
+    <lastmod>2020-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/categories/</loc>
+    <lastmod>2020-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2020-01-09-way-cooler-post-mortem/</loc>
+    <lastmod>2020-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/</loc>
+    <lastmod>2020-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2019-04-29-rewriting-way-cooler-in-c/</loc>
+    <lastmod>2019-04-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/posts/</loc>
+    <lastmod>2019-04-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/posts/2019-04-10-rust-c-bindings/</loc>
+    <lastmod>2019-04-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2019-01-09-year-of-wlroots/</loc>
+    <lastmod>2019-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2018-07-27-prehibernate-update/</loc>
+    <lastmod>2018-07-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/posts/2018-05-11-the-cost-of-moving-fast/</loc>
+    <lastmod>2018-05-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/posts/2018-04-28-programming-big/</loc>
+    <lastmod>2018-04-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2018-04-25-wlroots-hackathon-recap/</loc>
+    <lastmod>2018-04-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2018-02-14-a-totally-awesome-update/</loc>
+    <lastmod>2018-02-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2018-01-09-way-cooler-turns-two/</loc>
+    <lastmod>2018-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2017-12-25-way-cooler-2017/</loc>
+    <lastmod>2017-12-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2017-01-09-way-cooler-1-year-birthday/</loc>
+    <lastmod>2017-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2016-11-25-way-cooler-2016-november-update/</loc>
+    <lastmod>2016-11-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/posts/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</loc>
+    <lastmod>2016-08-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/way-cooler/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</loc>
+    <lastmod>2016-08-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/projects/</loc>
+  </url>
+  
+  <url>
+    <loc>https://timidger.github.io/tags/</loc>
+  </url>
+  
 </urlset>

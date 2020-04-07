@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>A (totally Awesome) update - A Pragmatic Place</title><link rel="icon" type="image/png" href=favicon-light.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="A (totally Awesome) update" />
+<meta property="og:description" content="Hey all! It&rsquo;s been a bit quiet for a while, so I&rsquo;d thought I&rsquo;d give an update on both Way Cooler and wlroots-rs, the wrapper I&rsquo;m building for the new compositor framework wlroots which I explained briefly in my Way Cooler: 2018 blog post.
+Way Cooler Development on Way Cooler has slowed considerably for me these past several months, mostly because I have focused on wlroots-rs. However, thanks to the wonderful work of psychon there has been non-trivial progress!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://timidger.github.io/way-cooler/2018-02-14-a-totally-awesome-update/" />
+<meta property="article:published_time" content="2018-02-14T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-02-14T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="A (totally Awesome) update"/>
+<meta name="twitter:description" content="Hey all! It&rsquo;s been a bit quiet for a while, so I&rsquo;d thought I&rsquo;d give an update on both Way Cooler and wlroots-rs, the wrapper I&rsquo;m building for the new compositor framework wlroots which I explained briefly in my Way Cooler: 2018 blog post.
+Way Cooler Development on Way Cooler has slowed considerably for me these past several months, mostly because I have focused on wlroots-rs. However, thanks to the wonderful work of psychon there has been non-trivial progress!"/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/main.css" />
+
+	<script src="https://timidger.github.io/js/feather.min.js"></script>
+	
+	<script src="https://timidger.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="https://timidger.github.io/">A Pragmatic Place</a></h1>
+	<div class="site-description"><h2>Preston Carpenter&rsquo;s technical blog</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/timidger" title="Github"><i data-feather="github"></i></a><a href="mailto:APragmaticPlace@gmail.com" title="email"><i data-feather=""></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/about">About the author</a>
+			</li>
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All Posts</a>
+			</li>
+			
+			<li>
+				<a href="/way-cooler">Archived posts</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">A (totally Awesome) update</h1>
+			<div class="meta">Posted at &mdash; Feb 14, 2018</div>
+		</div>
+
+		<div class="markdown">
+			<p>Hey all! It&rsquo;s been a bit quiet for a while, so I&rsquo;d thought I&rsquo;d give an update on both Way Cooler and <a href="https://github.com/swaywm/wlroots-rs">wlroots-rs</a>, the wrapper I&rsquo;m building for the new compositor framework <a href="https://github.com/swaywm/wlroots">wlroots</a> which I explained briefly in my <a href="/blog/2017/12/24/way-cooler-2017.html">Way Cooler: 2018 blog post</a>.</p>
+<h1 id="way-cooler">Way Cooler</h1>
+<p>Development on Way Cooler has slowed considerably for me these past several months, mostly because I have focused on wlroots-rs. However, thanks to the wonderful work of <a href="https://github.com/psychon">psychon</a> there has been non-trivial progress!</p>
+<p>The fruit of his efforts can probably best be described by this image:</p>
+<p><img src="/assets/awesome_bar_in_way_cooler.png" alt=""></p>
+<p>If you look closely at the top&hellip; yep that&rsquo;s the Awesome status bar rendering in Way Cooler.</p>
+<p>This isn&rsquo;t representative of what&rsquo;s available on master at the moment, because we will be redoing the rendering pipeline for Way Cooler when wlroots-rs is complete. However we already have enough of the API surface laid out that Awesome can load up a cairo surface and draw the status bar which is really cool!</p>
+<h1 id="wlroots-rs">wlroots-rs</h1>
+<p>This is where the majority of my work has been so far. It has taken a <em>lot</em> of effort to design wlroots-rs so that it&rsquo;s 100% safe for Rust users.</p>
+<p>The API is mostly trait based, and tries to keep the modular design of wlroots while at the same time making it much easier to write several parts. Here&rsquo;s a minimal compositor using the library:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#00a">extern</span><span style="color:#bbb"> </span><span style="color:#00a">crate</span><span style="color:#bbb"> </span>wlroots;<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">fn</span> <span style="color:#0a0">main</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>wlroots::utils::init_logging(wlroots::utils::L_DEBUG,<span style="color:#bbb"> </span><span style="color:#0aa">None</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>wlroots::CompositorBuilder::new().build_auto((),<span style="color:#bbb"> </span><span style="color:#0aa">None</span>,<span style="color:#bbb"> </span><span style="color:#0aa">None</span>,<span style="color:#bbb"> </span><span style="color:#0aa">None</span>)<span style="color:#bbb">
+</span><span style="color:#bbb">                                     </span>.run()<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>This works today, though I highly suggest you don&rsquo;t run that in a TTY directly&hellip;this really is a minimal example. wlroots gives us <strong>much</strong> more control, so because we didn&rsquo;t define any way to get any user input once you start this program you can&rsquo;t break out of it&hellip;short of turning off your machine.</p>
+<p>Here&rsquo;s a more complete example you can run either in a TTY or in an X11 or Wayland instance:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#4c8317">#[macro_use]</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">extern</span><span style="color:#bbb"> </span><span style="color:#00a">crate</span><span style="color:#bbb"> </span>wlroots;<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">use</span><span style="color:#bbb"> </span>wlroots::{Compositor,<span style="color:#bbb"> </span>CompositorBuilder,<span style="color:#bbb"> </span>CursorBuilder,<span style="color:#bbb"> </span>InputManagerHandler,<span style="color:#bbb"> </span>Keyboard,<span style="color:#bbb">
+</span><span style="color:#bbb">              </span>KeyboardHandler,<span style="color:#bbb"> </span>Output,<span style="color:#bbb"> </span>OutputBuilder,<span style="color:#bbb"> </span>OutputBuilderResult,<span style="color:#bbb"> </span>OutputHandler,<span style="color:#bbb">
+</span><span style="color:#bbb">              </span>OutputLayout,<span style="color:#bbb"> </span>OutputManagerHandler,<span style="color:#bbb"> </span>Pointer,<span style="color:#bbb"> </span>PointerHandler,<span style="color:#bbb"> </span>XCursorTheme};<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">use</span><span style="color:#bbb"> </span>wlroots::key_events::KeyEvent;<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">use</span><span style="color:#bbb"> </span>wlroots::pointer_events::{AxisEvent,<span style="color:#bbb"> </span>ButtonEvent,<span style="color:#bbb"> </span>MotionEvent};<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">use</span><span style="color:#bbb"> </span>wlroots::utils::{init_logging,<span style="color:#bbb"> </span>L_DEBUG};<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">use</span><span style="color:#bbb"> </span>wlroots::wlroots_sys::gl;<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">use</span><span style="color:#bbb"> </span>wlroots::wlroots_sys::wlr_button_state::WLR_BUTTON_RELEASED;<span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">use</span><span style="color:#bbb"> </span>wlroots::xkbcommon::xkb::keysyms::KEY_Escape;<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">State</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>color: [<span style="color:#0aa">f32</span>;<span style="color:#bbb"> </span><span style="color:#099">4</span>],<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>default_color: [<span style="color:#0aa">f32</span>;<span style="color:#bbb"> </span><span style="color:#099">4</span>],<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>xcursor_theme: <span style="color:#0a0;text-decoration:underline">XCursorTheme</span>,<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>layout: <span style="color:#0a0;text-decoration:underline">OutputLayout</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">impl</span><span style="color:#bbb"> </span>State<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">fn</span> <span style="color:#0a0">new</span>(xcursor_theme: <span style="color:#0a0;text-decoration:underline">XCursorTheme</span>,<span style="color:#bbb"> </span>layout: <span style="color:#0a0;text-decoration:underline">OutputLayout</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#0a0;text-decoration:underline">Self</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>State<span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>color: [<span style="color:#099">0.25</span>,<span style="color:#bbb"> </span><span style="color:#099">0.25</span>,<span style="color:#bbb"> </span><span style="color:#099">0.25</span>,<span style="color:#bbb"> </span><span style="color:#099">1.0</span>],<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>default_color: [<span style="color:#099">0.25</span>,<span style="color:#bbb"> </span><span style="color:#099">0.25</span>,<span style="color:#bbb"> </span><span style="color:#099">0.25</span>,<span style="color:#bbb"> </span><span style="color:#099">1.0</span>],<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>xcursor_theme,<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>layout<span style="color:#bbb"> </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span>compositor_data!(State);<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">OutputManager</span>;<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">ExOutput</span>;<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">InputManager</span>;<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">ExPointer</span>;<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">ExKeyboardHandler</span>;<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">impl</span><span style="color:#bbb"> </span>OutputManagerHandler<span style="color:#bbb"> </span><span style="color:#00a">for</span><span style="color:#bbb"> </span>OutputManager<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">fn</span> <span style="color:#0a0">output_added</span>&lt;<span style="color:#1e90ff">&#39;output</span>&gt;(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>self,<span style="color:#bbb">
+</span><span style="color:#bbb">                             </span>compositor: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Compositor,<span style="color:#bbb">
+</span><span style="color:#bbb">                             </span>builder: <span style="color:#0a0;text-decoration:underline">OutputBuilder</span>&lt;<span style="color:#1e90ff">&#39;output</span>&gt;)<span style="color:#bbb">
+</span><span style="color:#bbb">                             </span>-&gt; <span style="color:#0aa">Option</span>&lt;OutputBuilderResult&lt;<span style="color:#1e90ff">&#39;output</span>&gt;&gt;<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>result<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>builder.build_best_mode(ExOutput);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>state: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>State<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>compositor.into();<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>xcursor<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>state.xcursor_theme<span style="color:#bbb">
+</span><span style="color:#bbb">                           </span>.get_cursor(<span style="color:#a50">&#34;left_ptr&#34;</span>.into())<span style="color:#bbb">
+</span><span style="color:#bbb">                           </span>.expect(<span style="color:#a50">&#34;Could not load left_ptr cursor&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>image<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>&amp;xcursor.images()[<span style="color:#099">0</span>];<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// TODO use output config if present instead of auto
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span>state.layout.add_auto(result.output);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>cursor<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>state.layout.cursors()[<span style="color:#099">0</span>];<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>cursor.set_cursor_image(image);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>(x,<span style="color:#bbb"> </span>y)<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>cursor.coords();<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// https://en.wikipedia.org/wiki/Mouse_warping
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span>cursor.warp(<span style="color:#0aa">None</span>,<span style="color:#bbb"> </span>x,<span style="color:#bbb"> </span>y);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#0aa">Some</span>(result)<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">impl</span><span style="color:#bbb"> </span>KeyboardHandler<span style="color:#bbb"> </span><span style="color:#00a">for</span><span style="color:#bbb"> </span>ExKeyboardHandler<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">fn</span> <span style="color:#0a0">on_key</span>(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>self,<span style="color:#bbb"> </span>compositor: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Compositor,<span style="color:#bbb"> </span>_: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Keyboard,<span style="color:#bbb"> </span>key_event: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>KeyEvent)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">for</span><span style="color:#bbb"> </span>key<span style="color:#bbb"> </span><span style="color:#00a">in</span><span style="color:#bbb"> </span>key_event.pressed_keys()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#00a">if</span><span style="color:#bbb"> </span>key<span style="color:#bbb"> </span>==<span style="color:#bbb"> </span>KEY_Escape<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>compositor.terminate()<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">impl</span><span style="color:#bbb"> </span>PointerHandler<span style="color:#bbb"> </span><span style="color:#00a">for</span><span style="color:#bbb"> </span>ExPointer<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">fn</span> <span style="color:#0a0">on_motion</span>(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>self,<span style="color:#bbb"> </span>compositor: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Compositor,<span style="color:#bbb"> </span>_: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Pointer,<span style="color:#bbb"> </span>event: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">MotionEvent</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>state: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>State<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>compositor.into();<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>(delta_x,<span style="color:#bbb"> </span>delta_y)<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>event.delta();<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>state.layout.cursors()[<span style="color:#099">0</span>].move_to(event.device(),<span style="color:#bbb"> </span>delta_x,<span style="color:#bbb"> </span>delta_y);<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">fn</span> <span style="color:#0a0">on_button</span>(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>self,<span style="color:#bbb"> </span>compositor: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Compositor,<span style="color:#bbb"> </span>_: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Pointer,<span style="color:#bbb"> </span>event: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">ButtonEvent</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>state: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>State<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>compositor.into();<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">if</span><span style="color:#bbb"> </span>event.state()<span style="color:#bbb"> </span>==<span style="color:#bbb"> </span>WLR_BUTTON_RELEASED<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>state.color<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>state.default_color;<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>}<span style="color:#bbb"> </span><span style="color:#00a">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>state.color<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>[<span style="color:#099">0.25</span>,<span style="color:#bbb"> </span><span style="color:#099">0.25</span>,<span style="color:#bbb"> </span><span style="color:#099">0.25</span>,<span style="color:#bbb"> </span><span style="color:#099">1.0</span>];<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>state.color[event.button()<span style="color:#bbb"> </span><span style="color:#00a">as</span><span style="color:#bbb"> </span><span style="color:#0aa">usize</span><span style="color:#bbb"> </span>%<span style="color:#bbb"> </span><span style="color:#099">3</span>]<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#099">1.0</span>;<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">fn</span> <span style="color:#0a0">on_axis</span>(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>self,<span style="color:#bbb"> </span>compositor: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Compositor,<span style="color:#bbb"> </span>_: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Pointer,<span style="color:#bbb"> </span>event: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">AxisEvent</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>state: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>State<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>compositor.into();<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">for</span><span style="color:#bbb"> </span>color_byte<span style="color:#bbb"> </span><span style="color:#00a">in</span><span style="color:#bbb"> </span>&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>state.default_color[..<span style="color:#099">3</span>]<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>*color_byte<span style="color:#bbb"> </span>+=<span style="color:#bbb"> </span><span style="color:#00a">if</span><span style="color:#bbb"> </span>event.delta()<span style="color:#bbb"> </span>&gt;<span style="color:#bbb"> </span><span style="color:#099">0.0</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>-<span style="color:#099">0.05</span><span style="color:#bbb"> </span>}<span style="color:#bbb"> </span><span style="color:#00a">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span><span style="color:#099">0.05</span><span style="color:#bbb"> </span>};<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#00a">if</span><span style="color:#bbb"> </span>*color_byte<span style="color:#bbb"> </span>&gt;<span style="color:#bbb"> </span><span style="color:#099">1.0</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>*color_byte<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#099">1.0</span><span style="color:#bbb">
+</span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#00a">if</span><span style="color:#bbb"> </span>*color_byte<span style="color:#bbb"> </span>&lt;<span style="color:#bbb"> </span><span style="color:#099">0.0</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>*color_byte<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#099">0.0</span><span style="color:#bbb">
+</span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>state.color<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>state.default_color.clone()<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">impl</span><span style="color:#bbb"> </span>OutputHandler<span style="color:#bbb"> </span><span style="color:#00a">for</span><span style="color:#bbb"> </span>ExOutput<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">fn</span> <span style="color:#0a0">on_frame</span>(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>self,<span style="color:#bbb"> </span>compositor: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Compositor,<span style="color:#bbb"> </span>output: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Output)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>state: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>State<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>compositor.into();<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// NOTE gl functions will probably always be unsafe.
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span><span style="color:#00a">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>output.make_current();<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>gl::ClearColor(state.color[<span style="color:#099">0</span>],<span style="color:#bbb"> </span>state.color[<span style="color:#099">1</span>],<span style="color:#bbb"> </span>state.color[<span style="color:#099">2</span>],<span style="color:#bbb"> </span><span style="color:#099">1.0</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>gl::Clear(gl::COLOR_BUFFER_BIT);<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>output.swap_buffers();<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">impl</span><span style="color:#bbb"> </span>InputManagerHandler<span style="color:#bbb"> </span><span style="color:#00a">for</span><span style="color:#bbb"> </span>InputManager<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">fn</span> <span style="color:#0a0">pointer_added</span>(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>self,<span style="color:#bbb">
+</span><span style="color:#bbb">                     </span>_: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Compositor,<span style="color:#bbb">
+</span><span style="color:#bbb">                     </span>_: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Pointer)<span style="color:#bbb">
+</span><span style="color:#bbb">                     </span>-&gt; <span style="color:#0aa">Option</span>&lt;<span style="color:#0aa">Box</span>&lt;PointerHandler&gt;&gt;<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#0aa">Some</span>(<span style="color:#0aa">Box</span>::new(ExPointer))<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">fn</span> <span style="color:#0a0">keyboard_added</span>(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>self,<span style="color:#bbb">
+</span><span style="color:#bbb">                      </span>_: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Compositor,<span style="color:#bbb">
+</span><span style="color:#bbb">                      </span>_: <span style="color:#00a">&amp;</span><span style="color:#0a0;text-decoration:underline">mut</span><span style="color:#bbb"> </span>Keyboard)<span style="color:#bbb">
+</span><span style="color:#bbb">                      </span>-&gt; <span style="color:#0aa">Option</span>&lt;<span style="color:#0aa">Box</span>&lt;KeyboardHandler&gt;&gt;<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#0aa">Some</span>(<span style="color:#0aa">Box</span>::new(ExKeyboardHandler))<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">fn</span> <span style="color:#0a0">main</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>init_logging(L_DEBUG,<span style="color:#bbb"> </span><span style="color:#0aa">None</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>cursor<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>CursorBuilder::new().expect(<span style="color:#a50">&#34;Could not create cursor&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>xcursor_theme<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>XCursorTheme::load_theme(<span style="color:#0aa">None</span>,<span style="color:#bbb"> </span><span style="color:#099">16</span>).expect(<span style="color:#a50">&#34;Could not load theme&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">let</span><span style="color:#bbb"> </span><span style="color:#00a">mut</span><span style="color:#bbb"> </span>layout<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>OutputLayout::new().expect(<span style="color:#a50">&#34;Could not construct an output layout&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>layout.attach_cursor(cursor);<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>compositor<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>CompositorBuilder::new().build_auto(State::new(xcursor_theme,<span style="color:#bbb"> </span>layout),<span style="color:#bbb">
+</span><span style="color:#bbb">                                                         </span><span style="color:#0aa">Some</span>(<span style="color:#0aa">Box</span>::new(InputManager)),<span style="color:#bbb">
+</span><span style="color:#bbb">                                                         </span><span style="color:#0aa">Some</span>(<span style="color:#0aa">Box</span>::new(OutputManager)),<span style="color:#bbb">
+</span><span style="color:#bbb">                                                         </span><span style="color:#0aa">None</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>compositor.run();<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>This gives you an idea of the API surface. As you can see, the only lines of unsafe that aren&rsquo;t wrapped are for talking to opengl directly. This and other examples can be found in the project repo.</p>
+<p>I&rsquo;m fairly sure my API design means there&rsquo;s no way to break the holy mutability / aliasing tenants of Rust, but if anyone wants to look and point out any mistakes I made I certainly won&rsquo;t complain.</p>
+<p>And finally, here&rsquo;s what I&rsquo;ve been working on in the past week on wlroots-rs. This is the <a href="https://github.com/Smithay/wayland-rs/blob/master/wayland-client/examples/simple_window.rs">example wayland-rs client</a> being drawn in wlroots-rs:</p>
+<p><img src="/assets/proto_wlroots-rs_rendering.png" alt=""></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>So lots of exciting rendering milestones have been reached just this week. There&rsquo;s still a lot to do, as you can see from the <a href="https://github.com/swaywm/wlroots-rs/issues">wlroots-rs issue list</a> and the <a href="https://github.com/way-cooler/way-cooler/issues?q=is%3Aissue+is%3Aopen+label%3AAwesome">Way Cooler issue list</a>. If you want to help out, feel free to ask a question <a href="https://gitter.im/way-cooler/way-cooler">on our gitter channel</a></p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+		</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> ©Copyright Preston Carpenter 2016, 2020 |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+</html>

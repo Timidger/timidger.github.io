@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Giving up on wlroots-rs - A Pragmatic Place</title><link rel="icon" type="image/png" href=favicon-light.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Giving up on wlroots-rs" />
+<meta property="og:description" content="Way Cooler is a Wayland compositor that was written in Rust using wlc. Since last April I&rsquo;ve been rewriting it to use wlroots. In order to do that however I had to wrap the library so that it could be used in Rust. I worked on wlroots-rs and put Way Cooler on the back burner for a long time. After over 1,000 commits I&rsquo;m giving up on it.
+Problems with wlroots-rs in detail Ownership with handles wlroots-rs was going to be the safe Rust wrapper for the very complicated wlroots library." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://timidger.github.io/way-cooler/2019-04-29-rewriting-way-cooler-in-c/" />
+<meta property="article:published_time" content="2019-04-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-04-29T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Giving up on wlroots-rs"/>
+<meta name="twitter:description" content="Way Cooler is a Wayland compositor that was written in Rust using wlc. Since last April I&rsquo;ve been rewriting it to use wlroots. In order to do that however I had to wrap the library so that it could be used in Rust. I worked on wlroots-rs and put Way Cooler on the back burner for a long time. After over 1,000 commits I&rsquo;m giving up on it.
+Problems with wlroots-rs in detail Ownership with handles wlroots-rs was going to be the safe Rust wrapper for the very complicated wlroots library."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/main.css" />
+
+	<script src="https://timidger.github.io/js/feather.min.js"></script>
+	
+	<script src="https://timidger.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="https://timidger.github.io/">A Pragmatic Place</a></h1>
+	<div class="site-description"><h2>Preston Carpenter&rsquo;s technical blog</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/timidger" title="Github"><i data-feather="github"></i></a><a href="mailto:APragmaticPlace@gmail.com" title="email"><i data-feather=""></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/about">About the author</a>
+			</li>
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All Posts</a>
+			</li>
+			
+			<li>
+				<a href="/way-cooler">Archived posts</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Giving up on wlroots-rs</h1>
+			<div class="meta">Posted at &mdash; Apr 29, 2019</div>
+		</div>
+
+		<div class="markdown">
+			<p><a href="https://github.com/way-cooler/way-cooler">Way Cooler</a> is a Wayland compositor
+that was written in Rust using <a href="https://github.com/Cloudef/wlc">wlc</a>. Since
+<a href="https://github.com/way-cooler/way-cooler/pull/516">last April</a> I&rsquo;ve been
+rewriting it to use <a href="https://github.com/swaywm/wlroots">wlroots</a>. In order to do
+that however I had to wrap the library so that it could be used in Rust. I
+worked on <a href="https://github.com/swaywm/wlroots-rs">wlroots-rs</a> and put Way Cooler
+on the back burner for a long time. After over 1,000 commits I&rsquo;m giving up on it.</p>
+<h2 id="problems-with-wlroots-rs-in-detail">Problems with wlroots-rs in detail</h2>
+<h3 id="ownership-with-handles">Ownership with handles</h3>
+<p>wlroots-rs was going to be the safe Rust wrapper for the very complicated
+<a href="https://github.com/swaywm/wlroots">wlroots library</a>. wlroots implements large
+parts of a Wayland compositor and provides pluggable modules that most
+compositors will want.</p>
+<p>The biggest problem when wrapping wlroots was defining the ownership model of
+the objects that wlroots exposes. To demonstrate this I will focus on a single
+resource that illustrates the problem: an output.</p>
+<p>A Wayland &ldquo;output&rdquo; is the resource that represents a display device. Commonly
+this means it handles a computer monitor. This resource could disappear at any
+time in the life cycle of the application. This is easy enough to imagine: all
+it takes is a yank of the display&rsquo;s power cord and the monitor goes away. This
+is basically the exact opposite of the Rust memory model. Rust likes to own
+things and give compile-time defined borrows of that memory. This is runtime
+lifetime management that must be managed in some way.</p>
+<p>You cannot simply define it like so:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">Output</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>output_c_ptr: *<span style="color:#00a">mut</span><span style="color:#bbb"> </span>wlr_output<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">impl</span><span style="color:#bbb"> </span>Output<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#aaa;font-style:italic">// Forward all the calls to the c pointer
+</span><span style="color:#aaa;font-style:italic"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>If this was done then it would be possible to leak the memory using <code>Box::leak</code>
+and say that an output will live forever &ndash; even though it can&rsquo;t.</p>
+<p>The simplest way to achieve this safely would be to use reference counted
+pointers and expose only weak pointers. Here is a (fake) example of how this
+could look:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#aaa;font-style:italic">// This is a _very_ simple example for clarity.
+</span><span style="color:#aaa;font-style:italic">// wlroots-rs is not implemented like this.
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">RealOutput</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>lifeline: <span style="color:#0a0;text-decoration:underline">Rc</span>&lt;*<span style="color:#00a">mut</span><span style="color:#bbb"> </span>wlr_output&gt;<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">Output</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>lifeline: <span style="color:#0a0;text-decoration:underline">Weak</span>&lt;*<span style="color:#00a">mut</span><span style="color:#bbb"> </span>wlr_output&gt;<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">impl</span><span style="color:#bbb"> </span>Output<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#a50">/// Changes the mode (resolution) of an output.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#00a">pub</span><span style="color:#bbb"> </span><span style="color:#00a">fn</span> <span style="color:#0a0">change_mode</span>(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>self,<span style="color:#bbb"> </span>mode: <span style="color:#0a0;text-decoration:underline">Mode</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#0aa">Result</span>&lt;(),<span style="color:#bbb"> </span>()&gt;<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>output_ptr<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>lifeline.upgrade().ok_or(())?;<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>wlr_output_change_mode(output_ptr,<span style="color:#bbb"> </span>mode.into());<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>This naive style implementation could work, however it would cause a lot of
+branching code. Each call to wlroots will require a check to see if the handle
+has been dropped, even though it almost certainly has not been dropped (it can
+only be dropped between event callbacks, wlroots/Wayland is callback based).
+This means there will be unnecessary paths (that are hopefully marked cold) that
+either panic or return an error.</p>
+<p>This is obviously not wanted so the next best thing is define a range where it
+is safe to use the reference to the resource: i.e. we want to be able to define
+a lifetime for a code block. This leads us to the <em>actual</em> design of wlroots-rs,
+using handles (note that this <em>is</em> actual code):</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#a50">/// A non-owned reference counted handle to a resource.
+</span><span style="color:#a50">///
+</span><span style="color:#a50">/// The resource could be destroyed at any time, it depends on the resource.
+</span><span style="color:#a50">///
+</span><span style="color:#a50">/// For example an output is destroyed when its physical output is
+</span><span style="color:#a50">/// &#34;disconnected&#34; on DRM. &#34;disconnected&#34; depends on the output (e.g. sometimes
+</span><span style="color:#a50">/// turning it off counts as &#34;disconnected&#34;).
+</span><span style="color:#a50">/// However, when the backend is instead headless an output lives until it is
+</span><span style="color:#a50">/// destroyed explicitly by the library user.
+</span><span style="color:#a50">///
+</span><span style="color:#a50">/// Some resources are completely controlled by the user. For example although
+</span><span style="color:#a50">/// you refer to a `Seat` with handles it is only destroyed when you call the
+</span><span style="color:#a50">/// special destroy method on the seat handle.
+</span><span style="color:#a50">///
+</span><span style="color:#a50">/// Please refer to the specific resource documentation for a description of
+</span><span style="color:#a50">/// the lifetime particular to that resource.
+</span><span style="color:#a50"></span><span style="color:#00a">pub</span><span style="color:#bbb"> </span><span style="color:#00a">struct</span> <span style="color:#0a0;text-decoration:underline">Handle</span>&lt;D: <span style="color:#0aa">Clone</span>,<span style="color:#bbb"> </span>T,<span style="color:#bbb"> </span>W: <span style="color:#0a0;text-decoration:underline">Handleable</span>&lt;D,<span style="color:#bbb"> </span>T&gt;<span style="color:#bbb"> </span>+<span style="color:#bbb"> </span><span style="color:#0aa">Sized</span>&gt;<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">pub</span>(<span style="color:#00a">crate</span>)<span style="color:#bbb"> </span>ptr: <span style="color:#0a0;text-decoration:underline">NonNull</span>&lt;T&gt;,<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">pub</span>(<span style="color:#00a">crate</span>)<span style="color:#bbb"> </span>handle: <span style="color:#0a0;text-decoration:underline">Weak</span>&lt;Cell&lt;<span style="color:#0aa">bool</span>&gt;&gt;,<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">pub</span>(<span style="color:#00a">crate</span>)<span style="color:#bbb"> </span>_marker: <span style="color:#0a0;text-decoration:underline">PhantomData</span>&lt;W&gt;,<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">pub</span>(<span style="color:#00a">crate</span>)<span style="color:#bbb"> </span>data: <span style="color:#0aa">Option</span>&lt;D&gt;<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">impl</span>&lt;D: <span style="color:#0aa">Clone</span>,<span style="color:#bbb"> </span>T,<span style="color:#bbb"> </span>W: <span style="color:#0a0;text-decoration:underline">Handleable</span>&lt;D,<span style="color:#bbb"> </span>T&gt;&gt;<span style="color:#bbb"> </span>Handle&lt;D,<span style="color:#bbb"> </span>T,<span style="color:#bbb"> </span>W&gt;<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#a50">/// Upgrades a handle to a reference to the backing object.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">///
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// # Safety
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// This returns an &#34;owned&#34; value when really you don&#39;t own it all.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// Depending on the type, it&#39;s possible that the resource will be freed
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// once this returned value is dropped, causing a possible double free.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// Potentially it instead is just unbound, it depends on the resource.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">///
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// Regardless, you should not use this interface. Use the `run` method.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#4c8317">#[doc(hidden)]</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">pub</span><span style="color:#bbb"> </span><span style="color:#00a">unsafe</span><span style="color:#bbb"> </span><span style="color:#00a">fn</span> <span style="color:#0a0">upgrade</span>(&amp;self)<span style="color:#bbb"> </span>-&gt; <span style="color:#0a0;text-decoration:underline">HandleResult</span>&lt;W&gt;<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>self.handle.upgrade()<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>.ok_or(HandleErr::AlreadyDropped)<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#aaa;font-style:italic">// NOTE
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">            </span><span style="color:#aaa;font-style:italic">// We drop the Rc here because having two would allow a dangling
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">            </span><span style="color:#aaa;font-style:italic">// pointer to exist!
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">            </span>.and_then(|check|<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">                </span><span style="color:#00a">if</span><span style="color:#bbb"> </span>check.get()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">                    </span><span style="color:#00a">return</span><span style="color:#bbb"> </span><span style="color:#0aa">Err</span>(HandleErr::AlreadyBorrowed)<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">                </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>wrapper_obj<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>W::from_handle(self)?;<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>check.set(<span style="color:#00a">true</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">                </span><span style="color:#0aa">Ok</span>(wrapper_obj)<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>})<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#a50">/// Run a function with a reference to the resource if its still alive.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">///
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// Returns the result of the function, if successful.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">///
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// # Safety
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// By enforcing a rather harsh limit on the lifetime of the resource
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// to a short lived scope of an anonymous function,
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// this function ensures the resource does not live longer
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// than it exists.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">///
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// # Panics
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// This function will panic if multiple mutable borrows are detected.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// This will happen if you call `upgrade` directly within this callback,
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// or if a handle to the same resource was upgraded some where else up the
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#a50">/// stack.
+</span><span style="color:#a50"></span><span style="color:#bbb">    </span><span style="color:#00a">pub</span><span style="color:#bbb"> </span><span style="color:#00a">fn</span> <span style="color:#0a0">run</span>&lt;F,<span style="color:#bbb"> </span>R&gt;(&amp;self,<span style="color:#bbb"> </span>runner: <span style="color:#0a0;text-decoration:underline">F</span>)<span style="color:#bbb"> </span>-&gt; <span style="color:#0a0;text-decoration:underline">HandleResult</span>&lt;R&gt;<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">where</span><span style="color:#bbb">
+</span><span style="color:#bbb">        </span>F: <span style="color:#0aa">FnOnce</span>(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>W)<span style="color:#bbb"> </span>-&gt; <span style="color:#0a0;text-decoration:underline">R</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span><span style="color:#00a">mut</span><span style="color:#bbb"> </span>wrapped_obj<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#00a">unsafe</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span>self.upgrade()?<span style="color:#bbb"> </span>};<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// We catch panics here to deal with an extreme edge case.
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">//
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// If the library user catches panics from the `run` function then their
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// resource used flag will still be set to `true` when it should be set
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// to `false`.
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>res<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>panic::catch_unwind(panic::AssertUnwindSafe(||<span style="color:#bbb"> </span>runner(&amp;<span style="color:#00a">mut</span><span style="color:#bbb"> </span>wrapped_obj)));<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">if</span><span style="color:#bbb"> </span><span style="color:#00a">let</span><span style="color:#bbb"> </span><span style="color:#0aa">Some</span>(check)<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>self.handle.upgrade()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#aaa;font-style:italic">// Sanity check that it hasn&#39;t been tampered with. If so, we should
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">            </span><span style="color:#aaa;font-style:italic">// just panic. If we are currently
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">            </span><span style="color:#aaa;font-style:italic">// panicking this will abort.
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">            </span><span style="color:#00a">if</span><span style="color:#bbb"> </span>!check.get()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>wlr_log!(WLR_ERROR,<span style="color:#bbb"> </span><span style="color:#a50">&#34;After running callback, mutable lock was false&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">                </span>panic!(<span style="color:#a50">&#34;Lock in incorrect state!&#34;</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">            </span>check.set(<span style="color:#00a">false</span>);<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#00a">match</span><span style="color:#bbb"> </span>res<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#0aa">Ok</span>(res)<span style="color:#bbb"> </span>=&gt;<span style="color:#bbb"> </span><span style="color:#0aa">Ok</span>(res),<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#0aa">Err</span>(err)<span style="color:#bbb"> </span>=&gt;<span style="color:#bbb"> </span>panic::resume_unwind(err)<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>The full implementation can be found
+<a href="https://github.com/swaywm/wlroots-rs/blob/91a18bd541a6ec565d6ef78d18ee5cc6a413f684/src/utils/handle.rs">here</a>,
+its far too long and complicated to paste into a blog post.</p>
+<p>This code is very complicated, which isn&rsquo;t what you want for the defining
+abstraction of your safe library. As far as I&rsquo;m aware though it is correct. It&rsquo;s
+also incredibly ugly to use in practice:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#00a">fn</span> <span style="color:#0a0">some_wlroots_callback</span>(output_handle: <span style="color:#0a0;text-decoration:underline">OutputHandle</span>,<span style="color:#bbb">
+</span><span style="color:#bbb">                         </span>surface_handle: <span style="color:#0a0;text-decoration:underline">SurfaceHandle</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>output_handle.run(|output|<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span>surface_handle.run(|surface|<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">            </span><span style="color:#aaa;font-style:italic">// maybe some more nested layers...
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span>}).unwrap()<span style="color:#bbb">
+</span><span style="color:#bbb">    </span>}).unwrap()<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>To avoid this callback hell, I defined two macros to help: <a href="https://github.com/swaywm/wlroots-rs/blob/91a18bd541a6ec565d6ef78d18ee5cc6a413f684/src/macros.rs#L355">one normal
+macro</a>
+and a very complicated <a href="https://github.com/swaywm/wlroots-rs/blob/91a18bd541a6ec565d6ef78d18ee5cc6a413f684/wlroots-dehandle/src/lib.rs">procedural
+macro</a>.
+Here&rsquo;s what the procedural macro looks like:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#aaa;font-style:italic">// This does the same thing as the above code, but nicer.
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#4c8317">#[wlroots_dehandle]</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span><span style="color:#00a">fn</span> <span style="color:#0a0">some_wlroots_callback</span>(output_handle: <span style="color:#0a0;text-decoration:underline">OutputHandle</span>,<span style="color:#bbb">
+</span><span style="color:#bbb">                         </span>surface_handle: <span style="color:#0a0;text-decoration:underline">SurfaceHandle</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#4c8317">#[dehandle]</span><span style="color:#bbb"> </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>output<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>output;<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#4c8317">#[dehandle]</span><span style="color:#bbb"> </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>surface<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>surface_handle;<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>This expands out the lines to use the non-proc macro, which in turn becomes the
+callback hell mess. The only problem with this scheme is now that the control
+flow is all wrong:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#aaa;font-style:italic">// this is actual code I had to write (simplified)
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#00a">for</span><span style="color:#bbb"> </span>shell<span style="color:#bbb"> </span><span style="color:#00a">in</span><span style="color:#bbb"> </span>mapped_shells<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#4c8317">#[dehandle]</span><span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#00a">let</span><span style="color:#bbb"> </span>surface<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>shell.surface();<span style="color:#bbb">
+</span><span style="color:#bbb">    </span><span style="color:#aaa;font-style:italic">// If not ready to render, don&#39;t render it yet
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">    </span><span style="color:#00a">if</span><span style="color:#bbb"> </span>!surface.is_mapped()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// What we _want_ to write
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// break
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">
+</span><span style="color:#bbb">        </span><span style="color:#aaa;font-style:italic">// What we have to write because this is actually in a callback...
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">        </span><span style="color:#00a">return</span><span style="color:#bbb"> </span><span style="color:#aaa;font-style:italic">// actually goes to the next shell in the mapped_shells...
+</span><span style="color:#aaa;font-style:italic"></span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></code></pre></div><p>So this solution &ldquo;works&rdquo; but it&rsquo;s not great. Ultimately it&rsquo;s very confusing for
+users. It was too confusing for <a href="https://puri.sm/posts/end-of-year-librem-5-update/">purism to get
+working</a> (this
+<a href="https://www.youtube.com/watch?v=oX5yVyLbLZE">video</a> was very painful for me to
+watch - the library was unusable). <a href="https://github.com/buffet/kiwmi">Kiwmi</a>
+initially tried using wlroots-rs but swiftly gave up and used wlroots itself.</p>
+<h3 id="the-sheer-amount-of-api-to-wrap">The sheer amount of API to wrap</h3>
+<p>Currently there is 11 <strong>THOUSAND</strong> lines of Rust in wlroots-rs. <em>All</em> of this
+code is just wrapper code, it doesn&rsquo;t do anything but memory management. This
+isn&rsquo;t just repeated code either, I defined a <a href="https://github.com/swaywm/wlroots-rs/blob/91a18bd541a6ec565d6ef78d18ee5cc6a413f684/src/macros.rs#L201">very complicated and ugly
+macro</a>
+to try to make it easier.</p>
+<p>This wrapper code doesn&rsquo;t cover even half of the API surface of wlroots. It&rsquo;s
+exhausting writing wlroots-rs code, memory management is constantly on my mind
+because that&rsquo;s the whole purpose of the library. It&rsquo;s a very boring problem and
+it&rsquo;s always at odds with usability - see the motivation for the escape from
+callback hell described above.</p>
+<p>To do all of this, and then go write Way Cooler, already a big undertaking, is too
+much for me to commit to. When the benefit at the end of the day is just so I
+don&rsquo;t have to write C, that doesn&rsquo;t really make it worth it. If I got this out
+of the box by simply linking to the library, like I can in C++, then it would be
+much more tenable.</p>
+<p>I can always just use unsafe bindings to wlroots, just like I would with any
+other language. However, the <em>entire point</em> of Rust is that it&rsquo;s safe. Doing
+that is not an option because at that point you lose the entire benefit of the
+language.</p>
+<h3 id="custom-wayland-protocols-arent-possible-safely">Custom Wayland protocols aren&rsquo;t possible (safely)</h3>
+<p>Even if I accepted the usability problems of the API and I powered through
+writing all of the wrapper code there is still one major limitation of
+wlroots-rs that I can&rsquo;t find a way to work around: it&rsquo;s impossible to allow a
+compositor to safely define a custom Wayland protocol with wlroots-rs.</p>
+<p>The way you extend compositors in Wayland is writing protocols. wlroots provides
+a lot of protocols already, but many compositor will want to write custom ones.
+Way Cooler will definitely need to write custom protocols to implement the
+functionality Awesome users have come to expect from their Lua scripts.</p>
+<p>The protocols are written in XML and code is generated from it. The Rust code
+generator that currently exists is part of the wayland-rs project.
+Unfortunately, the code generated by this tool requires using wayland-rs in its
+entirety to manage the Wayland stack. This is because it uses custom data
+storage exposed by Wayland to handle memory management to ensure safety, whereas
+it&rsquo;s normally used by OpenGL (for more information, see <a href="https://smithay.github.io/wayland-rs-v-0-21.html">this blog
+post</a>).</p>
+<p>This means I would have to define a <em>different</em> scanner that would generate code
+that hopefully could be made safe to use (but probably not). So now there will
+need to be unsafe code in compositor code even though wlroots-rs was supposed to
+handle it properly&hellip;</p>
+<h2 id="why-smithay-is-not-a-solution">Why Smithay is not a solution</h2>
+<p><a href="https://github.com/Smithay">Smithay</a> is a library similar to wlroots, but is
+written entirely in Rust. I&rsquo;m not interested in trying to use Smithay for Way
+Cooler.</p>
+<p>Smithay is very incomplete. Very, very incomplete compared to wlroots. It is no
+where near usable and the current trajectory doesn&rsquo;t look like it will be usable
+very soon either. wlroots is a great framework and has a strong backing in the
+community so I don&rsquo;t see the need to abandon it just so I can keep using Rust.</p>
+<p>Way Cooler will have to talk to C libraries any ways (the rest of the Wayland
+ecosystem is all C, including libinput, DRM, and OpenGL), so either more
+bindings will need to be written (again distracting from the main problem of
+making a working compositor) or they will need to be RiiR.</p>
+<p>I wish them luck, but I don&rsquo;t feel interested in rewriting the entire world in
+Rust just so Way Cooler can be in Rust. I like Rust, but not enough to reinvent
+the wheel so it doesn&rsquo;t have any C in it.</p>
+<h2 id="rewriting-way-cooler-in-c">Rewriting Way Cooler in C</h2>
+<p><a href="https://github.com/way-cooler/way-cooler/pull/609">Starting with this PR</a>, the
+compositor for Way Cooler will be written in C.</p>
+<p>This was a difficult decision to make, not because Way Cooler must be written in
+Rust, but because I was throwing away quite a bit of work that I invested in
+wlroots-rs. Thought it had many problems, it came out to be surprisingly usable despite
+its limitations. However, it wasn&rsquo;t going to be tenable for Way Cooler (for the
+reasons listed above) so it must be abandoned.</p>
+<p>Some people have seen this as controversial, politically speaking. I don&rsquo;t
+really understand this view point, as the fact that Way Cooler is written in
+Rust is an implementation incidental. Now it makes sense for it to be written in
+C, given the constraints that I have discovered through painful trial and error,
+so it will be written in C.</p>
+<p>Note that the client part of Way Cooler (the part that will implement the
+AwesomeWM compatibility) is still written in Rust. This is the most pragmatic
+solution because it can utilize
+<a href="https://github.com/Smithay/wayland-rs">wayland-rs</a> and
+<a href="https://github.com/kyren/rlua">rlua</a>.</p>
+<p>As an interesting side note: both developers behind those particular projects
+have elected to <a href="https://github.com/kyren/luster">rewrite</a> their projects <a href="https://smithay.github.io/wayland-rs-v-0-21.html">in
+Rust</a>. They are doing this
+because it&rsquo;s difficult to write good bindings to C libraries, and so the natural
+conclusion to making it work well in Rust is to rewrite it.</p>
+<p>I want to make one (mildly controversial) thing clear: rewriting a library
+for the sake of only using Rust is not good engineering. A literal rewrite of a
+project to Rust is not interesting, it&rsquo;s not useful, it just causes churn and
+splits ecosystems. Time would be better spent either working with existing
+solutions that already have the effort put in to make them correct or to come up
+with new green-field projects.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+		</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> ©Copyright Preston Carpenter 2016, 2020 |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+</html>

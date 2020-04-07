@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Way Cooler in 2017 and beyond - A Pragmatic Place</title><link rel="icon" type="image/png" href=favicon-light.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Way Cooler in 2017 and beyond" />
+<meta property="og:description" content="2017 Recap 2017 was a big year for Way Cooler. Version 0.7.0 was just released and altogether we&rsquo;ve had 3 major releases, with 6 minor releases spread out amongst them. Some of the big features from this year include:
+ Server-side borders Gaps X11-bar support Tabbed/Stacked tiling A separate lockscreen program A separate scrot-like program Multi-output support Redshift support Expansion of our D-Bus interfaces Expansion of our Lua library  Though that doesn&rsquo;t cover all of what was accomplished, that list alone shows Way Cooler has accomplished a lot this year." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://timidger.github.io/way-cooler/2017-12-25-way-cooler-2017/" />
+<meta property="article:published_time" content="2017-12-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-12-24T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Way Cooler in 2017 and beyond"/>
+<meta name="twitter:description" content="2017 Recap 2017 was a big year for Way Cooler. Version 0.7.0 was just released and altogether we&rsquo;ve had 3 major releases, with 6 minor releases spread out amongst them. Some of the big features from this year include:
+ Server-side borders Gaps X11-bar support Tabbed/Stacked tiling A separate lockscreen program A separate scrot-like program Multi-output support Redshift support Expansion of our D-Bus interfaces Expansion of our Lua library  Though that doesn&rsquo;t cover all of what was accomplished, that list alone shows Way Cooler has accomplished a lot this year."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/main.css" />
+
+	<script src="https://timidger.github.io/js/feather.min.js"></script>
+	
+	<script src="https://timidger.github.io/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="https://timidger.github.io/">A Pragmatic Place</a></h1>
+	<div class="site-description"><h2>Preston Carpenter&rsquo;s technical blog</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/timidger" title="Github"><i data-feather="github"></i></a><a href="mailto:APragmaticPlace@gmail.com" title="email"><i data-feather=""></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/about">About the author</a>
+			</li>
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All Posts</a>
+			</li>
+			
+			<li>
+				<a href="/way-cooler">Archived posts</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Way Cooler in 2017 and beyond</h1>
+			<div class="meta">Posted at &mdash; Dec 24, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<h1 id="2017-recap">2017 Recap</h1>
+<p>2017 was a big year for Way Cooler. <a href="https://github.com/way-cooler/way-cooler/releases/tag/v0.7.0">Version 0.7.0 was just released</a> and altogether we&rsquo;ve had <a href="https://github.com/way-cooler/way-cooler/releases">3 major releases, with 6 minor releases spread out amongst them</a>. Some of the big features from this year include:</p>
+<ul>
+<li>Server-side borders</li>
+<li>Gaps</li>
+<li>X11-bar support</li>
+<li>Tabbed/Stacked tiling</li>
+<li><a href="https://github.com/way-cooler/way-cooler-lock">A separate lockscreen program</a></li>
+<li><a href="https://github.com/way-cooler/way-cooler-grab">A separate scrot-like program</a></li>
+<li>Multi-output support</li>
+<li>Redshift support</li>
+<li>Expansion of our <a href="http://way-cooler.org/docs/d-bus">D-Bus interfaces</a></li>
+<li>Expansion of our <a href="http://way-cooler.org/docs/lua">Lua library</a></li>
+</ul>
+<p>Though that doesn&rsquo;t cover all of what was accomplished, that list alone shows Way Cooler has accomplished a lot this year.</p>
+<p>I want to take this moment to thank <a href="https://github.com/way-cooler/way-cooler/graphs/contributors">all the new contributors to Way Cooler</a> who were a great help, with specific thanks to  <a href="https://github.com/alexander-smoktal">@alexander-smoktal</a> (for his continued work on wlroots-rs, the next phase of Way Cooler) and <a href="https://github.com/Arnaz87">@Arnaz87</a> (for improving the look and feel of the borders tremendously).</p>
+<p>Way Cooler has obtained over 1,200 stars on Github, and, as <a href="https://www.phoronix.com/scan.php?page=news_item&amp;px=Way-Cooler-2017">Phoronix mentioned in a recent article</a>, it is still steadily growing as an alternative compositor despite a low contributor count and an unclear goal on what Way Cooler is actually trying to achieve.</p>
+<p>Well today I&rsquo;m going to fix at least one of those problems.</p>
+<h1 id="way-cooler-in-2018">Way Cooler in 2018</h1>
+<p>Whenever I&rsquo;ve pitched Way Cooler I&rsquo;ve always used a simple formula to describe it:</p>
+<p>Way Cooler = Awesome + i3</p>
+<p>As <a href="http://swaywm.org">Sway</a> has grown however it&rsquo;s obvious that the i3 niche in the Wayland world has been more than filled. Sway functions as an excellent clone to i3, leaving most of the feature set of Way Cooler to be comparatively lacking.</p>
+<p>In today&rsquo;s world Way Cooler is a psuedo-i3 clone, with only the Lua integration and benefits of Rust to differentiate it from the competition. This leaves both camps disappointed, as users of i3 will just use Sway and users of Awesome will just keep using Awesome.</p>
+<p>So I&rsquo;ve decided to simplify the formula:</p>
+<p>Way Cooler = Awesome <del>+ i3</del></p>
+<p>For those that have been following discussion on the <a href="https://gitter.im/way-cooler/way-cooler">gitter channel</a> or following the <a href="https://github.com/way-cooler/way-cooler/issues">issue tracker closely</a> this probably comes as no surprise. But I want to take this opportunity to declare 2018 as the &ldquo;The Year of Awesome&rdquo;.</p>
+<h1 id="2018-the-year-of-awesome">2018: The Year of Awesome</h1>
+<p>The goal of 2018 is for Way Cooler to be a fully compatible <a href="https://awesomewm.org/">AwesomeWM</a> clone.</p>
+<p>To achieve this goal you must, by the end of 2018, be able to drop in not only the <a href="https://github.com/awesomeWM/awesome/blob/master/awesomerc.lua">default Awesome <code>rc.lua</code> file</a> but also <strong>any custom made Awesome user configuration setup</strong> and it should just work.</p>
+<p>I fully expect to not hit the entirety of this goal in 2018 alone. If you look at the <a href="https://github.com/way-cooler/way-cooler/graphs/contributors">contributor graph of Way Cooler</a> I&rsquo;m still the biggest writer of the code by far, and I have more things in my life outside Way Cooler demanding my attention more than ever before.</p>
+<p>For anyone who is interested, <strong>now is a great time to get involved</strong>. The work that this will require is almost entirely greenfield, I&rsquo;ll essentially be rewriting a compositor from scratch using an <a href="https://github.com/swaywm/wlroots">entirely new compositor framework</a> and writing code for a <a href="https://awesomewm.org/doc/api/">well defined and battle tested Lua API</a>.</p>
+<p>If you want to get involved, or just understand what technical challenges lay ahead for me, read on&hellip;</p>
+<h2 id="a-new-compositor-framework-emerges">A New Compositor Framework Emerges</h2>
+<p><a href="https://github.com/Cloudef/wlc">wlc</a>, the compositor framework currently in use by both Sway and Way Cooler, has been deprecated. The original creator has stopped working on it long ago and it&rsquo;s very unlikely to continue to receive any updates past its current 0.10.0 status. To learn more about why WLC is being abandoned, <a href="https://github.com/way-cooler/way-cooler/issues/248">see this thread</a>.</p>
+<p>The two official successors to wlc that spawned from that discussion are <a href="https://github.com/Smithay/smithay">Smithay</a> and <a href="https://github.com/swaywm/wlroots">wlroots</a>.</p>
+<p>Smithay is still very early in development, with it only just recently <a href="https://smithay.github.io/smithay-v-0-1.html">having its 0.1 release</a>. They&rsquo;ve done tremendous work, but there&rsquo;s still a lot that needs to be done before they are ready to be used in production.</p>
+<p>wlroots, meanwhile, is <a href="https://github.com/swaywm/sway/issues/1390">nearly complete</a>. Their example compositor, rootson, works as a (basic) daily driver and the developers of Sway are <a href="https://github.com/swaywm/sway/issues/1390">actively working on the porting process</a>.</p>
+<p>I have decided to use wlroots, for reasons you can read about in the wlc deprecation discussion. Unlike Smithay, wlroots is written in C just like wlc. Unlike wlc, it&rsquo;s much more complicated. This means the simple act of making safe wrappers for wlroots is going to be very difficult. wlc took several months to wrap last time, and while I have better knowledge and tools to tackle it this time it&rsquo;s still going to be very difficult without sacrificing the benefits of Rust to the altar of practicality.</p>
+<p>Work on wlroots-rs, the Rust bindings for wlroots, <a href="https://github.com/swaywm/wlroots-rs">has already begun</a>. Now that the API has mostly stabilized, this is where I&rsquo;ll be diverting the majority of my efforts for the foreseeable future. To get involved, take a look at the <a href="https://github.com/swaywm/wlroots-rs/issues">issue tracker</a> and ask questions in <a href="https://gitter.im/way-cooler/way-cooler">the Way Cooler gitter channel</a>.</p>
+<p>wlroots-rs will be complete when we have created a 1-1 replica of wlroot&rsquo;s <a href="https://github.com/swaywm/wlroots/tree/master/rootston">rootson</a> in <strong>100% safe Rust</strong>.</p>
+<h2 id="making-way-cooler-awesome">Making Way Cooler Awesome</h2>
+<p>Once wlroots-rs is complete the &ldquo;real&rdquo; work begins. Porting over existing Way Cooler code is something that could be done, but would mostly be useless since the majority of the code will be thrown out once the AwesomeWM transition is complete.</p>
+<p>What will probably happen instead is that a fresh new compositor will be created. This new compositor has way less requirements: it is only expected to run a Lua thread. No tiling, no D-Bus interfaces, just Lua. It will still be much more complicated than current Way Cooler though, since wlroots gives us more control by stripping away the layers of abstraction that wlc has previously provided for us.</p>
+<p>However, <strong>work can still be done on Awesome compatibility, even while others are working on wlroots-rs</strong>! We have an <code>rc.lua</code> <a href="https://github.com/way-cooler/way-cooler/blob/master/config/rc.lua">in the current Way Cooler codebase</a> that can actually be loaded and ran <em>today</em> with no errors! It achieves this by implementing the barest interface that does absolutely nothing.</p>
+<p>It&rsquo;s entirely possible to get AwesomeWM compatibility working before wlroot-rs is complete. <strong>If you&rsquo;re interested, check out <a href="https://github.com/way-cooler/way-cooler/issues?q=is%3Aissue+is%3Aopen+label%3AAwesome">this issue list</a>, <a href="https://github.com/way-cooler/way-cooler/tree/master/src/awesome">this part of the code where the changes will be made</a>, and finally you can always ask questions on our <a href="https://gitter.im/way-cooler/way-cooler">gitter channel</a></strong>.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+		</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> ©Copyright Preston Carpenter 2016, 2020 |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script>feather.replace()</script>
+</body>
+</html>

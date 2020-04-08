@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>I can&#39;t keep up with idiomatic Rust - A Pragmatic Place</title><link rel="icon" type="image/png" href=/favicon-light.ico /><meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://timidger.github.io/css/main.css" />
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="https://timidger.github.io/">A Pragmatic Place</a></h1>
+	<div class="site-description"><h2>Preston Carpenter&rsquo;s technical blog</h2></div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/about">About the author</a>
+			</li>
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All Posts</a>
+			</li>
+			
+			<li>
+				<a href="/way-cooler">Archived posts</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">I can&#39;t keep up with idiomatic Rust</h1>
+			<div class="meta">Posted at &mdash; Apr 8, 2020</div>
+		</div>
+
+		<div class="markdown">
+			<p>Recently withoutboats posted a
+<a href="https://boats.gitlab.io/blog/post/failure-to-fehler/">series</a> of blog
+<a href="https://boats.gitlab.io/blog/post/why-ok-wrapping/">posts</a> about some syntax
+sugar he would like added to Rust.</p>
+<p>The gist of it is, as far as I can tell, there should be some way to not have to
+write <code>Ok(...)</code> for the happy path in functions which return <code>Result</code>. He
+specifically is advocating for a <code>throws</code> keyword that would go a bit beyond
+just this basic change, but the problem he&rsquo;s mainly trying to fix is having to
+type <code>Ok(...)</code> so often.</p>
+<p>I haven&rsquo;t really been involved with the Rust community that much, especially
+since I stopped working on Way Cooler. This isn&rsquo;t from lack of using Rust, I
+use Rust in my day job after all, but rather from disinterest in getting
+involved in what seems to be mostly bikeshedding. The <code>.await</code> war was the final
+straw to make me stop watching the Rust community beyond what comes in the
+release notes.</p>
+<p>So in many ways I&rsquo;m coming into this argument as an outsider &ndash; I have not read
+any thing beyond the two linked blog posts and am missing most of the discussion
+that has gone on. I&rsquo;m not going to weigh in on <code>throws</code> vs some annotation vs
+Fehler because even though I have an opinion I detest bikeshedding.</p>
+<p>However, as a long time user of Rust (4 years, wow how time flies!) the
+constantly changing standard of what constitutes &ldquo;idiomatic Rust&rdquo; is starting to
+wear me down. <code>try!()</code> -&gt; <code>?</code>, the addition of <code>impl trait</code>, and the <code>dyn</code>
+keyword are all features that have changed what it means to write idiomatic
+Rust. When these features come out I need to now change my code in order to keep
+it idiomatic.</p>
+<p>That&rsquo;s not to say I hate these features. I remember being very happy when <code>?</code>
+came about and <code>dyn</code> is certainly clearer than what we had before. However
+having to make these superficial changes again and again causes churn in all my
+codebases. Because Rust releases every 6 weeks that means every 6 weeks I might
+need to make superficial changes to my codebase (not to mention potentially have
+to do a major point release &ndash; using <code>impl</code> is an API breaking change).</p>
+<p>So to bring my complaints back around to the issue at hand: if <code>Ok</code> wrapping
+came in the next Rust release this would be another change that requires me to
+update my code in order to be idiomatic. This isn&rsquo;t sustainable for me &ndash; I
+appreciate Rust team&rsquo;s commitment to backwards compatibility but the constant
+disregard for forwards-compatibility makes me feel like I&rsquo;m on a treadmill
+trying, and failing, to keep up.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+	</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> ©Copyright Preston Carpenter 2016, 2020 </div>
+	</nav>
+</div>
+
+</body>
+</html>

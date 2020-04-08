@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>©Copyright Preston Carpenter 2016, 2020</copyright>
-    <lastBuildDate>Wed, 10 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 08 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://timidger.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>I can&#39;t keep up with idiomatic Rust</title>
+      <link>https://timidger.github.io/posts/i-cant-keep-up-with-idiomatic-rust/</link>
+      <pubDate>Wed, 08 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/posts/i-cant-keep-up-with-idiomatic-rust/</guid>
+      <description>Recently withoutboats posted a series of blog posts about some syntax sugar he would like added to Rust.
+The gist of it is, as far as I can tell, there should be some way to not have to write Ok(...) for the happy path in functions which return Result. He specifically is advocating for a throws keyword that would go a bit beyond just this basic change, but the problem he&amp;rsquo;s mainly trying to fix is having to type Ok(.</description>
+    </item>
     
     <item>
       <title>RiiR considered harmful</title>

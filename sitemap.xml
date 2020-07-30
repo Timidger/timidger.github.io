@@ -48,11 +48,6 @@
   </url>
   
   <url>
-    <loc>https://timidger.github.io/posts/2019-04-10-rust-c-bindings/</loc>
-    <lastmod>2019-04-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://timidger.github.io/way-cooler/2019-01-09-year-of-wlroots/</loc>
     <lastmod>2019-01-09T00:00:00+00:00</lastmod>
   </url>
@@ -63,12 +58,12 @@
   </url>
   
   <url>
-    <loc>https://timidger.github.io/posts/2018-05-11-the-cost-of-moving-fast/</loc>
+    <loc>https://timidger.github.io/posts/the-cost-of-moving-fast/</loc>
     <lastmod>2018-05-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://timidger.github.io/posts/2018-04-28-programming-big/</loc>
+    <loc>https://timidger.github.io/posts/programming-big/</loc>
     <lastmod>2018-04-28T00:00:00+00:00</lastmod>
   </url>
   
@@ -103,7 +98,7 @@
   </url>
   
   <url>
-    <loc>https://timidger.github.io/posts/2016-08-14-designing-a-bi-mutable-directional-tree-safely-in-rust/</loc>
+    <loc>https://timidger.github.io/posts/designing-a-bi-mutable-directional-tree-safely-in-rust/</loc>
     <lastmod>2016-08-14T00:00:00+00:00</lastmod>
   </url>
   

@@ -13,6 +13,16 @@
     
     
     <item>
+      <title>Authenticity</title>
+      <link>https://timidger.github.io/authenticity/</link>
+      <pubDate>Thu, 30 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://timidger.github.io/authenticity/</guid>
+      <description>One of my favourite things about the internet are the sites that ooze with authenticity. Ironically, my own web presence is very unauthentic &amp;ndash; I don&amp;rsquo;t put many things out there and the one thing I am vaguely known for (Way Cooler) was managed more like a product than as a labour of love.
+Regardless, here&amp;rsquo;s a list of blogs/essays/sites from people that I&amp;rsquo;ve found to be authentic. Some of these people are controversial (and are probably people I wouldn&amp;rsquo;t get along with) but are never the less authentic.</description>
+    </item>
+    
+    <item>
       <title>I can&#39;t keep up with idiomatic Rust</title>
       <link>https://timidger.github.io/posts/i-cant-keep-up-with-idiomatic-rust/</link>
       <pubDate>Wed, 08 Apr 2020 00:00:00 +0000</pubDate>
